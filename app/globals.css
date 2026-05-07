@@ -1,26 +1,348 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Dark mode variant: data-theme attribute ──────────────── */
+@custom-variant dark (&:is([data-theme="dark"] *));
+
+/* ══════════════════════════════════════════════════════════════
+   STATIC DESIGN TOKENS
+   ══════════════════════════════════════════════════════════════ */
+@theme {
+	/* ── Brand palette ─────────────────────────────────────── */
+	--color-brand-900: #1a3a4d;
+	--color-brand-800: #1e4458;
+	--color-brand-700: #085068;
+	--color-brand-600: #2d6080;
+	--color-brand-500: #4a8fa3;
+	--color-brand-400: #0fb5c8;
+	--color-brand-300: #8ecfdb;
+	--color-brand-200: #b3e0e8;
+	--color-brand-100: #e0f3f7;
+	--color-brand-50: #f4f9fb;
+
+	/* ── Typography ────────────────────────────────────────── */
+	--font-display: "Figtree", sans-serif;
+	--font-body: "Figtree", sans-serif;
+	--font-sans: "Figtree", sans-serif;
+	--font-mono:
+		ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+
+	/* ── Fluid type scale (floor 12 px) ───────────────────── */
+	--text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem); /* 12–14 px */
+	--text-sm: clamp(0.875rem, 0.825rem + 0.25vw, 1rem); /* 14–16 px */
+	--text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); /* 16–18 px */
+	--text-lg: clamp(1.125rem, 1.05rem + 0.375vw, 1.375rem); /* 18–22 px */
+	--text-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.625rem); /* 20–26 px */
+	--text-2xl: clamp(1.5rem, 1.35rem + 0.75vw, 2rem); /* 24–32 px */
+	--text-3xl: clamp(1.875rem, 1.625rem + 1.25vw, 2.5rem); /* 30–40 px */
+	--text-4xl: clamp(2.25rem, 1.9rem + 1.75vw, 3.25rem); /* 36–52 px */
+	--text-hero: clamp(2.75rem, 2.25rem + 2.5vw, 4.5rem); /* 44–72 px */
+
+	/* ── Spacing — 4 px grid ───────────────────────────────── */
+	--space-1: 0.25rem; /*   4 px */
+	--space-2: 0.5rem; /*   8 px */
+	--space-3: 0.75rem; /*  12 px */
+	--space-4: 1rem; /*  16 px */
+	--space-5: 1.25rem; /*  20 px */
+	--space-6: 1.5rem; /*  24 px */
+	--space-8: 2rem; /*  32 px */
+	--space-10: 2.5rem; /*  40 px */
+	--space-12: 3rem; /*  48 px */
+	--space-16: 4rem; /*  64 px */
+	--space-20: 5rem; /*  80 px */
+	--space-24: 6rem; /*  96 px */
+	--space-28: 7rem; /* 112 px */
+	--space-32: 8rem; /* 128 px */
+
+	/* ── Radii — all zero ──────────────────────────────────── */
+	--radius: 0px;
+	--radius-sm: 0px;
+	--radius-md: 0px;
+	--radius-lg: 0px;
+	--radius-xl: 0px;
+	--radius-2xl: 0px;
+	--radius-3xl: 0px;
+	--radius-4xl: 0px;
+
+	/* ── Transition ────────────────────────────────────────── */
+	--transition-ui: 200ms cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-ui: cubic-bezier(0.16, 1, 0.3, 1);
+
+	/* ── Shadows — none ────────────────────────────────────── */
+	--shadow-sm: none;
+	--shadow: none;
+	--shadow-md: none;
+	--shadow-lg: none;
+	--shadow-xl: none;
+	--shadow-2xl: none;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   SEMANTIC TOKENS — inline (resolve at use-site, theme-aware)
+   ══════════════════════════════════════════════════════════════ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+
+	--color-destructive: var(--destructive);
+
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	--color-surface: var(--surface);
+	--color-surface-2: var(--surface-2);
+
+	--color-chart-1: var(--chart-1);
+	--color-chart-2: var(--chart-2);
+	--color-chart-3: var(--chart-3);
+	--color-chart-4: var(--chart-4);
+	--color-chart-5: var(--chart-5);
+
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ══════════════════════════════════════════════════════════════
+   LIGHT THEME — :root
+   ══════════════════════════════════════════════════════════════ */
+:root {
+	color-scheme: light;
+
+	--background: #f4f9fb;
+	--foreground: #0c1a21;
+
+	--card: #ffffff;
+	--card-foreground: #0c1a21;
+
+	--popover: #ffffff;
+	--popover-foreground: #0c1a21;
+
+	--primary: #085068;
+	--primary-foreground: #f4f9fb;
+
+	--secondary: #0fb5c8;
+	--secondary-foreground: #0c1a21;
+
+	--muted: #e0f3f7;
+	--muted-foreground: #4a7a8a;
+
+	--accent: #0fb5c8;
+	--accent-foreground: #0c1a21;
+
+	--destructive: oklch(0.577 0.245 27.325);
+
+	--border: color-mix(in oklch, #085068 12%, transparent);
+	--input: color-mix(in oklch, #085068 12%, transparent);
+	--ring: #0fb5c8;
+
+	--surface: #ffffff;
+	--surface-2: #f4f9fb;
+
+	--chart-1: #085068;
+	--chart-2: #4a8fa3;
+	--chart-3: #0fb5c8;
+	--chart-4: #8ecfdb;
+	--chart-5: #b3e0e8;
+
+	--sidebar: #f4f9fb;
+	--sidebar-foreground: #0c1a21;
+	--sidebar-primary: #085068;
+	--sidebar-primary-foreground: #f4f9fb;
+	--sidebar-accent: #e0f3f7;
+	--sidebar-accent-foreground: #0c1a21;
+	--sidebar-border: color-mix(in oklch, #085068 12%, transparent);
+	--sidebar-ring: #0fb5c8;
+
+	--radius: 0px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DARK THEME — explicit attribute
+   ══════════════════════════════════════════════════════════════ */
+[data-theme="dark"] {
+	color-scheme: dark;
+
+	--background: #0c1a21;
+	--foreground: #ddeef3;
+
+	--card: #122130;
+	--card-foreground: #ddeef3;
+
+	--popover: #122130;
+	--popover-foreground: #ddeef3;
+
+	--primary: #0fb5c8;
+	--primary-foreground: #0c1a21;
+
+	--secondary: #1a2e3d;
+	--secondary-foreground: #ddeef3;
+
+	--muted: #1a2e3d;
+	--muted-foreground: #7aabbf;
+
+	--accent: #4a8fa3;
+	--accent-foreground: #ddeef3;
+
+	--destructive: oklch(0.704 0.191 22.216);
+
+	--border: color-mix(in oklch, #0fb5c8 12%, transparent);
+	--input: color-mix(in oklch, #0fb5c8 12%, transparent);
+	--ring: #4a8fa3;
+
+	--surface: #122130;
+	--surface-2: #1a2e3d;
+
+	--chart-1: #0fb5c8;
+	--chart-2: #4a8fa3;
+	--chart-3: #2d6080;
+	--chart-4: #8ecfdb;
+	--chart-5: #1e4458;
+
+	--sidebar: #122130;
+	--sidebar-foreground: #ddeef3;
+	--sidebar-primary: #0fb5c8;
+	--sidebar-primary-foreground: #0c1a21;
+	--sidebar-accent: #1a2e3d;
+	--sidebar-accent-foreground: #ddeef3;
+	--sidebar-border: color-mix(in oklch, #0fb5c8 12%, transparent);
+	--sidebar-ring: #4a8fa3;
+
+	--radius: 0px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DARK THEME — system preference fallback
+   ══════════════════════════════════════════════════════════════ */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+	:root:not([data-theme="light"]) {
+		color-scheme: dark;
+
+		--background: #0c1a21;
+		--foreground: #ddeef3;
+
+		--card: #122130;
+		--card-foreground: #ddeef3;
+
+		--popover: #122130;
+		--popover-foreground: #ddeef3;
+
+		--primary: #0fb5c8;
+		--primary-foreground: #0c1a21;
+
+		--secondary: #1a2e3d;
+		--secondary-foreground: #ddeef3;
+
+		--muted: #1a2e3d;
+		--muted-foreground: #7aabbf;
+
+		--accent: #4a8fa3;
+		--accent-foreground: #ddeef3;
+
+		--destructive: oklch(0.704 0.191 22.216);
+
+		--border: color-mix(in oklch, #0fb5c8 12%, transparent);
+		--input: color-mix(in oklch, #0fb5c8 12%, transparent);
+		--ring: #4a8fa3;
+
+		--surface: #122130;
+		--surface-2: #1a2e3d;
+
+		--chart-1: #0fb5c8;
+		--chart-2: #4a8fa3;
+		--chart-3: #2d6080;
+		--chart-4: #8ecfdb;
+		--chart-5: #1e4458;
+
+		--sidebar: #122130;
+		--sidebar-foreground: #ddeef3;
+		--sidebar-primary: #0fb5c8;
+		--sidebar-primary-foreground: #0c1a21;
+		--sidebar-accent: #1a2e3d;
+		--sidebar-accent-foreground: #ddeef3;
+		--sidebar-border: color-mix(in oklch, #0fb5c8 12%, transparent);
+		--sidebar-ring: #4a8fa3;
+
+		--radius: 0px;
+	}
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ══════════════════════════════════════════════════════════════
+   BASE RESET
+   ══════════════════════════════════════════════════════════════ */
+@layer base {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+		@apply border-border;
+	}
+
+	html {
+		scroll-behavior: smooth;
+		-webkit-text-size-adjust: 100%;
+		font-family: var(--font-body);
+		@apply antialiased;
+	}
+
+	body {
+		@apply bg-background text-foreground;
+		min-height: 100dvh;
+	}
+
+	::selection {
+		background-color: #0fb5c8;
+		color: #0c1a21;
+	}
+
+	img,
+	video,
+	svg {
+		display: block;
+		max-width: 100%;
+	}
+
+	p,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		overflow-wrap: break-word;
+	}
+
+	:focus:not(:focus-visible) {
+		outline: none;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--ring);
+		outline-offset: 2px;
+	}
 }
