@@ -1,15 +1,11 @@
 "use client";
 
-import {
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetClose,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader } from "@/components/ui/sheet";
+import { Logo } from "@/components/ui/Logo";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { staggerContainer } from "@/lib/animations";
@@ -60,24 +56,7 @@ export function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
 						justifyContent: "space-between",
 					}}
 				>
-					<span style={{ fontWeight: 700, color: "var(--foreground)" }}>
-						Medical Support
-					</span>
-					<SheetClose
-						aria-label="Chiudi menu"
-						style={{
-							background: "none",
-							border: "none",
-							cursor: "pointer",
-							padding: 0,
-							color: "var(--foreground)",
-							display: "inline-flex",
-							alignItems: "center",
-							justifyContent: "center",
-						}}
-					>
-						<X size={20} />
-					</SheetClose>
+					<Logo variant="dark" width={130} height={37} />
 				</SheetHeader>
 
 				{/* Nav */}

@@ -25,7 +25,7 @@ export function IntroSection() {
 				background: "var(--background)",
 			}}
 		>
-			<div style={{ maxWidth: "1400px", marginInline: "auto", width: "100%" }}>
+			<div style={{ maxWidth: "1200px", marginInline: "auto", width: "100%" }}>
 				{/* Top row — 2 colonne */}
 				<div
 					style={{

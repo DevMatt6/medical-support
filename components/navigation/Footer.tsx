@@ -54,7 +54,7 @@ export function Footer() {
 			>
 				{/* Col 1 — brand */}
 				<ScrollReveal variant="fadeUp" delay={0}>
-					<Logo />
+					<Logo variant="light" width={160} height={60} />
 					<p
 						style={{
 							fontSize: "var(--text-sm)",

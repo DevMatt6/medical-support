@@ -52,7 +52,11 @@ export function Navbar() {
 			>
 				{/* Left — logo */}
 				<Link href="/">
-					<Logo />
+					<Logo
+						variant={lightContent ? "light" : "dark"}
+						width={160}
+						height={60}
+					/>
 				</Link>
 
 				{/* Centre — desktop nav */}

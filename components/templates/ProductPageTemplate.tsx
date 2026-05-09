@@ -59,6 +59,12 @@ export interface ProductPageProps {
 		use: string;
 	}>;
 	descriptionTitle?: string;
+	ebdSection?: {
+		title: string;
+		subtitle: string;
+		description: string;
+		items: Array<{ icon: string; title: string; description: string }>;
+	};
 }
 
 /* ─── Section styles ───────────────────────────────────────────── */
@@ -381,12 +387,12 @@ function ProductFeatures({
 											style={{
 												textAlign: "left",
 												padding: "12px 16px",
-												borderBottom: "2px solid var(--foreground)",
+												borderBottom: "2px solid var(--accent)",
 												fontWeight: 600,
-												fontSize: "var(--text-xs)",
+												fontSize: "var(--text-md)",
 												textTransform: "uppercase",
 												letterSpacing: "0.07em",
-												color: "var(--foreground)",
+												color: "var(--accent)",
 												whiteSpace: "nowrap",
 											}}
 										>
@@ -401,9 +407,9 @@ function ProductFeatures({
 										<td
 											style={{
 												padding: "14px 16px",
-												borderBottom: "1px solid var(--border)",
+												borderBottom: "1px solid rgba(255, 255, 255, 0.6)",
 												fontWeight: 600,
-												color: "var(--foreground)",
+												color: "white",
 											}}
 										>
 											{m.name}
@@ -411,8 +417,8 @@ function ProductFeatures({
 										<td
 											style={{
 												padding: "14px 16px",
-												borderBottom: "1px solid var(--border)",
-												color: "var(--muted-foreground)",
+												borderBottom: "1px solid rgba(255, 255, 255, 0.6)",
+												color: "rgba(255, 255, 255, 0.6)",
 											}}
 										>
 											{m.dimensions}
@@ -420,8 +426,8 @@ function ProductFeatures({
 										<td
 											style={{
 												padding: "14px 16px",
-												borderBottom: "1px solid var(--border)",
-												color: "var(--muted-foreground)",
+												borderBottom: "1px solid rgba(255, 255, 255, 0.6)",
+												color: "rgba(255, 255, 255, 0.6)",
 											}}
 										>
 											{m.sensors}
@@ -429,8 +435,8 @@ function ProductFeatures({
 										<td
 											style={{
 												padding: "14px 16px",
-												borderBottom: "1px solid var(--border)",
-												color: "var(--muted-foreground)",
+												borderBottom: "1px solid rgba(255, 255, 255, 0.6)",
+												color: "rgba(255, 255, 255, 0.6)",
 											}}
 										>
 											{m.use}
@@ -509,7 +515,151 @@ function ProductFeatures({
 }
 
 /* ════════════════════════════════════════════════════════════════ */
-/*  4. SPECS                                                        */
+/*  4. EBD SECTION                                                  */
+/* ════════════════════════════════════════════════════════════════ */
+function ProductEbdSection({
+	ebdSection,
+}: {
+	ebdSection: NonNullable<ProductPageProps["ebdSection"]>;
+}) {
+	return (
+		<section style={{ ...sectionPad, background: "var(--accent)" }}>
+			<div
+				style={{
+					display: "grid",
+					gridTemplateColumns: "1fr 1fr",
+					gap: "clamp(32px, 5vw, 80px)",
+					alignItems: "end",
+					marginBottom: "clamp(40px, 6vw, 80px)",
+				}}
+			>
+				<div>
+					<ScrollReveal delay={0}>
+						<p
+							style={{
+								fontSize: "var(--text-xs)",
+								fontWeight: 600,
+								letterSpacing: "0.12em",
+								backgroundColor: "var(--primary)",
+								display: "inline-block",
+								padding: "4px 12px",
+								textTransform: "uppercase",
+								color: "white",
+								marginBottom: "var(--space-3)",
+							}}
+						>
+							Protocollo Diagnostico
+						</p>
+					</ScrollReveal>
+					<ScrollReveal delay={0.05}>
+						<h2
+							style={{
+								fontSize: "var(--text-3xl)",
+								fontWeight: 500,
+								color: "white",
+								marginBottom: "var(--space-4)",
+								lineHeight: 1.15,
+							}}
+						>
+							{ebdSection.title}
+						</h2>
+					</ScrollReveal>
+					<ScrollReveal delay={0.1}>
+						<p
+							style={{
+								fontSize: "var(--text-lg)",
+								color: "white",
+								opacity: 0.75,
+								fontWeight: 500,
+								margin: 0,
+							}}
+						>
+							{ebdSection.subtitle}
+						</p>
+					</ScrollReveal>
+				</div>
+				<ScrollReveal delay={0.15}>
+					<p
+						style={{
+							fontSize: "var(--text-base)",
+							color: "white",
+							opacity: 0.75,
+							lineHeight: 1.7,
+							margin: 0,
+						}}
+					>
+						{ebdSection.description}
+					</p>
+				</ScrollReveal>
+			</div>
+			<>
+				<style>{`
+            @media (min-width: 768px) {
+              .ebd-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            }
+            @media (min-width: 1024px) {
+              .ebd-grid { grid-template-columns: repeat(4, 1fr) !important; }
+            }
+          `}</style>
+				<div
+					className="ebd-grid"
+					style={{
+						display: "grid",
+						gridTemplateColumns: "1fr",
+						gap: "clamp(1px,0.5vw,25px)",
+						marginTop: "clamp(32px,4vw,56px)",
+					}}
+				>
+					{ebdSection.items.map((item, i) => (
+						<ScrollReveal
+							key={item.title}
+							variant="fadeUp"
+							delay={0.1 + i * 0.1}
+						>
+							<div
+								style={{
+									padding: "clamp(24px,3vw,40px)",
+									background: "white",
+									border: "1.5px solid var(--border)",
+									display: "flex",
+									flexDirection: "column",
+									gap: 16,
+								}}
+							>
+								<span style={{ color: "var(--secondary)" }}>
+									<DynamicIcon name={item.icon} />
+								</span>
+								<p
+									style={{
+										margin: 0,
+										fontSize: "var(--text-base)",
+										fontWeight: 600,
+										color: "var(--primary)",
+									}}
+								>
+									{item.title}
+								</p>
+								<p
+									style={{
+										margin: 0,
+										fontSize: "var(--text-sm)",
+										color: "var(--muted-foreground)",
+										lineHeight: 1.65,
+									}}
+								>
+									{item.description}
+								</p>
+							</div>
+						</ScrollReveal>
+					))}
+				</div>
+			</>
+		</section>
+	);
+}
+
+/* ════════════════════════════════════════════════════════════════ */
+/*  5. SPECS                                                        */
 /* ════════════════════════════════════════════════════════════════ */
 function ProductSpecs({ specs }: Pick<ProductPageProps, "specs">) {
 	return (
@@ -697,6 +847,7 @@ export function ProductPageTemplate({
 	features,
 	specs,
 	models,
+	ebdSection,
 }: ProductPageProps) {
 	return (
 		<>
@@ -707,6 +858,7 @@ export function ProductPageTemplate({
 				descriptionTitle={descriptionTitle}
 			/>
 			<ProductFeatures features={features} models={models} />
+			{ebdSection && <ProductEbdSection ebdSection={ebdSection} />}
 			<ProductSpecs specs={specs} />
 			<ProductCTA product={product} />
 		</>

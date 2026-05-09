@@ -31,30 +31,48 @@ export async function generateMetadata({
 /* ─── Per-product data ─────────────────────────────────────────── */
 type PageData = Omit<ProductPageProps, "product"> & {
 	descriptionTitle?: string;
+	ebdSection?: {
+		title: string;
+		subtitle: string;
+		description: string;
+		items: Array<{ icon: string; title: string; description: string }>;
+	};
 };
 
 const PRODUCT_DATA: Record<string, PageData> = {
 	baropodometro: {
 		descriptionTitle:
-			"Tecnologia brevettata, progettata per l'analisi avanzata delle pressioni plantari e della postura.",
+			"Tecnologia ULTRASENSOR brevettata: 7 sensori/cm² per l'analisi più precisa delle pressioni plantari.",
 		heroTagline:
 			"Piattaforma baropodometrica ad alta risoluzione per l'analisi statica e dinamica del passo.",
 		description: [
-			"Il Baropodometro 3D U.S. è la soluzione di riferimento per la misurazione clinica della distribuzione del carico plantare. Con oltre 7 sensori per cm² e una frequenza di acquisizione fino a 200 fps, offre dati in tempo reale sia in posizione statica che durante la deambulazione o la corsa.",
-			"Progettato per integrarsi nativamente con il software New BMS, consente di generare report clinici dettagliati in formato PDF e DICOM, condivisibili via cloud con il paziente o con altri specialisti. Certificazione CE MDR 2017/745.",
+			"Il Baropodometro 3D U.S. è la piattaforma di riferimento per la misurazione clinica della distribuzione del carico plantare. La tecnologia ULTRASENSOR garantisce 7 sensori per cm² — 7 volte superiore alla concorrenza — con un disturbo elettrico di appena 0,80% rispetto al 22% degli altri sistemi.",
+			"La superficie rigida (nessun tappetino in gomma) garantisce acquisizioni ripetibili nelle 4 direzioni, validate scientificamente. Il sistema è espandibile fino a 200 × 50 cm ed è compatibile sia con calzature che senza. Integrazione nativa con il software New BMS e certificazione CE MDR 2017/745.",
 		],
 		features: [
 			{
 				icon: "BarChart3",
-				title: "Analisi Statica e Dinamica",
+				title: "7 Sensori/cm² ULTRASENSOR",
 				description:
-					"Rileva la distribuzione del carico in stazione eretta e durante il cammino con precisione millimetrica.",
+					"Densità sensoriale 7× superiore alla concorrenza. Disturbo elettrico 0,80% vs 22% degli altri sistemi per dati clinicamente affidabili.",
 			},
 			{
 				icon: "Layers",
-				title: "Acquisizione Multistrato",
+				title: "Superficie Rigida Espandibile",
 				description:
-					"Tecnologia a strati sovrapposti per una mappatura tridimensionale della pressione plantare.",
+					"Nessun tappetino in gomma: acquisizioni stabili e ripetibili nelle 4 direzioni. Espandibile fino a 200 × 50 cm.",
+			},
+			{
+				icon: "Activity",
+				title: "5 Protocolli di Test",
+				description:
+					"Test Statico, Dinamico/Gait Cycle, Stabilometrico, Confronto Statico/Dinamico e valutazione con/senza calzature.",
+			},
+			{
+				icon: "Shield",
+				title: "Validazione Scientifica",
+				description:
+					"Acquisizioni nelle 4 direzioni validate con 20 anni di ricerca e pubblicazioni su riviste internazionali indicizzate.",
 			},
 			{
 				icon: "Wifi",
@@ -62,14 +80,84 @@ const PRODUCT_DATA: Record<string, PageData> = {
 				description:
 					"Trasmissione dati in tempo reale verso la piattaforma TELEPOSTUROLOGIA per la gestione remota.",
 			},
+			{
+				icon: "Cpu",
+				title: "Compatibilità Calzature",
+				description:
+					"Test eseguibili con e senza calzature. Ideale per protocolli sportivi e clinici differenziati.",
+			},
 		],
 		specs: [
-			{ label: "Sensori", value: "> 7 per cm²" },
-			{ label: "Risoluzione", value: "0,5 mm" },
-			{ label: "Dimensioni", value: "560 × 380 × 12 mm" },
+			{ label: "Tecnologia sensori", value: "ULTRASENSOR — 7/cm²" },
+			{ label: "Disturbo elettrico", value: "0,80%" },
+			{ label: "Superficie", value: "Rigida — no gomma" },
+			{
+				label: "Direzioni acquisizione",
+				value: "4 (validate scientificamente)",
+			},
 			{ label: "Connessione", value: "USB 3.0 / Wi-Fi" },
 			{ label: "Software", value: "New BMS (incluso)" },
+			{ label: "Certificazione", value: "CE MDR 2017/745" },
 		],
+		models: [
+			{
+				name: "CRISTAL 1",
+				dimensions: "50 × 50 cm",
+				sensors: 16384,
+				use: "Stabilometria clinica",
+			},
+			{
+				name: "CRISTAL 2",
+				dimensions: "100 × 50 cm",
+				sensors: 32768,
+				use: "Rotolamento podalico dinamico",
+			},
+			{
+				name: "CRISTAL SP",
+				dimensions: "150 × 50 cm",
+				sensors: 49152,
+				use: "Approfondimento sportivo",
+			},
+			{
+				name: "CRISTAL 3",
+				dimensions: "200 × 50 cm",
+				sensors: 65536,
+				use: "Valori dinamici del passo",
+			},
+		],
+		ebdSection: {
+			title: "Sistema EBD - Esame Biometrico Digitalizzato",
+			subtitle:
+				"Il protocollo diagnostico standardizzato validato da 20 anni di ricerca scientifica.",
+			description:
+				"Il Sistema EBD integra il Baropodometro 3D U.S. in un protocollo diagnostico completo. Ogni esame produce un Indice Biomeccanico Posturale (IBP) su scala 0–3 e un referto descrittivo automatico (ReBioDes), conforme alle linee guida del Ministero della Salute.",
+			items: [
+				{
+					icon: "BarChart3",
+					title: "Indice Biomeccanico Posturale (IBP)",
+					description:
+						"Scala standardizzata 0–3 per la classificazione oggettiva dello stato posturale del paziente.",
+				},
+				{
+					icon: "Database",
+					title: "Report ReBioDes",
+					description:
+						"Referto descrittivo automatico generato al termine di ogni esame, pronto per la cartella clinica.",
+				},
+				{
+					icon: "Heart",
+					title: "Questionario Posturologico",
+					description:
+						"Modulo anamnestico integrato per la raccolta standardizzata dei dati clinici del paziente.",
+				},
+				{
+					icon: "Shield",
+					title: "Validazione Scientifica",
+					description:
+						"20 anni di ricerca, pubblicazioni su riviste internazionali indicizzate e conformità alle linee guida del Ministero della Salute.",
+				},
+			],
+		},
 	},
 
 	"body-scan": {
