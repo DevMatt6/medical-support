@@ -141,18 +141,21 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 				}}
 			/>
 
-			{/* Numero progressivo 
+			{/* Numero progressivo  - nome prodotto */}
 			<span
 				style={{
 					fontSize: "var(--text-xs)",
-					fontWeight: 600,
-					color: "var(--primary)",
-					textTransform: "uppercase",
 					letterSpacing: "0.08em",
+					textTransform: "uppercase",
+					color: "white",
+					backgroundColor: "var(--secondary)",
+					padding: "6px 14px",
+					display: "inline-block",
+					alignSelf: "flex-start",
 				}}
 			>
-				{num}
-			</span>*/}
+				Cristal
+			</span>
 
 			{/* Nome prodotto */}
 			<h3

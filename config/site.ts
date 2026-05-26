@@ -12,17 +12,17 @@ export const siteConfig = {
 			href: "/prodotti",
 			children: [
 				{
-					label: "Baropodometro 3D U.S.",
+					label: "3D Ultrasensor",
 					href: "/prodotti/baropodometro",
 					description: "Piattaforma ad alta risoluzione con 7+ sensori/cm²",
 				},
 				{
-					label: "Body-Scan 3D",
+					label: "3D B.A.K.",
 					href: "/prodotti/body-scan",
 					description: "Valutazione posturale globale optoelettronica",
 				},
 				{
-					label: "PodoScan 3D",
+					label: "3D Podoscanalyzer",
 					href: "/prodotti/podo-scan",
 					description: "Scanner plantare computerizzato 2D→3D",
 				},
@@ -47,7 +47,7 @@ export const siteConfig = {
 	products: [
 		{
 			id: "baropodometro",
-			name: "Baropodometro 3D U.S.",
+			name: "Cristal 3D Ultrasensor",
 			slug: "baropodometro",
 			tagline: "Pressioni plantari ad altissima risoluzione",
 			description:
@@ -58,7 +58,7 @@ export const siteConfig = {
 		},
 		{
 			id: "body-scan",
-			name: "Body-Scan 3D",
+			name: "3D B.A.K.",
 			slug: "body-scan",
 			tagline: "Postura globale misurata in pochi secondi",
 			description:
@@ -69,7 +69,7 @@ export const siteConfig = {
 		},
 		{
 			id: "podo-scan",
-			name: "PodoScan 3D",
+			name: "3D Podoscanalyzer",
 			slug: "podo-scan",
 			tagline: "Dal piede piatto al modello 3D in secondi",
 			description:

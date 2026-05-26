@@ -25,7 +25,7 @@ export function IntroSection() {
 				background: "var(--background)",
 			}}
 		>
-			<div style={{ maxWidth: "1200px", marginInline: "auto", width: "100%" }}>
+			<div style={{ marginInline: "auto", width: "100%" }}>
 				{/* Top row — 2 colonne */}
 				<div
 					style={{
@@ -150,19 +150,22 @@ export function IntroSection() {
 						</ScrollReveal>
 					</div>
 				</div>
-				{/* Immagine full-width */}
-				<motion.div
-					style={{
-						marginTop: "clamp(48px,6vw,80px)",
-						height: "clamp(280px,40vw,1000px)",
-						backgroundImage: "url(/images/products/intro.png)",
-						backgroundSize: "cover",
-						backgroundPosition: "center",
-						overflow: "hidden",
-						y: parallaxY,
-					}}
-				/>{" "}
-			</div>{" "}
+			</div>
+
+			{/* Immagine full-width */}
+			<motion.div
+				style={{
+					marginTop: "clamp(48px,6vw,80px)",
+					marginLeft: "calc(-1 * clamp(24px,5vw,80px))",
+					marginRight: "calc(-1 * clamp(24px,5vw,80px))",
+					height: "clamp(280px,40vw,1000px)",
+					backgroundImage: "url(/images/products/intro.png)",
+					backgroundSize: "cover",
+					backgroundPosition: "bottom",
+					overflow: "hidden",
+					y: parallaxY,
+				}}
+			/>
 		</section>
 	);
 }
