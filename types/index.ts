@@ -23,7 +23,7 @@ export interface NewsItem {
 	subtitle?: string;
 	excerpt: string;
 	content: string[];
-	category: "evento" | "novità" | "company" | "clinica";
+	category: "evento" | "novità" | "progetti" | "clinica";
 	date: string;
 	image?: string;
 	agent?: string;
