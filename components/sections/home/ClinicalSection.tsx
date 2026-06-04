@@ -9,7 +9,7 @@ import { SplitText } from "@/components/ui/SplitText";
 const STATS = [
 	{ value: "20+", label: "anni di R&D" },
 	{ value: "5.000+", label: "professionisti" },
-	{ value: "CE MDR", label: "certificato" },
+	{ value: "CE", label: "MDR 2017/745" },
 ];
 
 export function ClinicalSection() {
@@ -85,7 +85,7 @@ export function ClinicalSection() {
 										marginTop: 20,
 										fontSize: "var(--text-base)",
 										color: "var(--muted-foreground)",
-										lineHeight: 1.7,
+										lineHeight: 1.5,
 									}}
 								>
 									Da oltre vent&apos;anni collaboriamo con università, ospedali
@@ -103,7 +103,7 @@ export function ClinicalSection() {
 										marginTop: 20,
 										fontSize: "var(--text-base)",
 										color: "var(--muted-foreground)",
-										lineHeight: 1.7,
+										lineHeight: 1.5,
 									}}
 								>
 									La certificazione CE MDR 2017/745 non è un traguardo ma un
@@ -123,12 +123,19 @@ export function ClinicalSection() {
 									}}
 								>
 									{STATS.map((stat) => (
-										<div key={stat.value}>
+										<div
+											key={stat.value}
+											style={{
+												textAlign: "center",
+												backgroundColor: "var(--muted)",
+												padding: "24px 0",
+											}}
+										>
 											<p
 												style={{
 													margin: 0,
 													fontSize: "var(--text-3xl)",
-													fontWeight: 500,
+													fontWeight: 700,
 													color: "var(--accent)",
 												}}
 											>
@@ -173,7 +180,7 @@ export function ClinicalSection() {
 						<ScrollReveal variant="fadeIn" delay={0.1}>
 							<div style={{ position: "relative", aspectRatio: "4/3" }}>
 								<Image
-									src="/images/ricerca.png"
+									src="/images/products/esame-postura-cammino.jpg"
 									alt="Ricerca clinica Medical Support"
 									fill
 									style={{ objectFit: "cover", objectPosition: "center" }}

@@ -81,7 +81,7 @@ export function IntroSection() {
 									marginBottom: 0,
 									fontSize: "var(--text-base)",
 									color: "var(--muted-foreground)",
-									lineHeight: 1.7,
+									lineHeight: 1.5,
 								}}
 							>
 								Medical Support nasce dall&apos;incontro tra ingegneria

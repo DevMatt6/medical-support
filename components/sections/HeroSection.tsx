@@ -75,7 +75,7 @@ export function HeroSection() {
 						accentWords={["diagnostica", "3D"]}
 						accentColor="var(--accent)"
 					>
-						L'innovazione della diagnostica 3D
+						L&apos;innovazione della diagnostica 3D
 					</SplitText>
 				</div>
 

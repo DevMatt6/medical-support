@@ -87,7 +87,7 @@ export function SoftwareSection() {
 							margin: "16px auto 0",
 							color: "var(--muted-foreground)",
 							fontSize: "var(--text-base)",
-							lineHeight: 1.7,
+							lineHeight: 1.5,
 						}}
 					>
 						Una piattaforma diagnostica completa per raccogliere, analizzare e

@@ -113,7 +113,7 @@ export function ApplicationsSection() {
 									fontSize: "var(--text-base)",
 									color: "white",
 									opacity: 0.75,
-									lineHeight: 1.7,
+									lineHeight: 1.3,
 								}}
 							>
 								Adottata da oltre 5.000 professionisti in tutto il mondo, la
