@@ -159,7 +159,7 @@ export function IntroSection() {
 					marginLeft: "calc(-1 * clamp(24px,5vw,80px))",
 					marginRight: "calc(-1 * clamp(24px,5vw,80px))",
 					height: "clamp(280px,40vw,1000px)",
-					backgroundImage: "url(/images/products/intro.png)",
+					backgroundImage: "url(/images/products/esame-pedana.jpg)",
 					backgroundSize: "cover",
 					backgroundPosition: "bottom",
 					overflow: "hidden",

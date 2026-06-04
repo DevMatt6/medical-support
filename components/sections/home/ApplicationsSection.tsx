@@ -24,12 +24,33 @@ const APPS: AppItem[] = [
 	{ icon: Building2, label: "Centri Podologici" },
 ];
 
+const MARQUEE_ITEMS = [...APPS, ...APPS, ...APPS];
+
 export function ApplicationsSection() {
 	return (
 		<>
 			<style>{`
-				@media (min-width: 1024px) {
-					.applications-grid { grid-template-columns: 40fr 60fr !important; }
+				@keyframes apps-marquee {
+					0% { transform: translate3d(0, 0, 0); }
+					100% { transform: translate3d(-33.333%, 0, 0); }
+				}
+				.applications-marquee {
+					animation: apps-marquee 24s linear infinite;
+					will-change: transform;
+				}
+				.applications-marquee:hover {
+					animation-play-state: paused;
+				}
+				@media (max-width: 767px) {
+					.applications-header {
+						grid-template-columns: 1fr !important;
+					}
+					.applications-right {
+						margin-top: 20px !important;
+					}
+					.applications-card {
+						min-width: 220px !important;
+					}
 				}
 			`}</style>
 			<section
@@ -40,15 +61,15 @@ export function ApplicationsSection() {
 				}}
 			>
 				<div
-					className="applications-grid"
+					className="applications-header"
 					style={{
 						display: "grid",
-						gridTemplateColumns: "1fr",
-						gap: "clamp(48px,6vw,80px)",
+						gridTemplateColumns: "1.1fr 0.9fr",
+						gap: "clamp(24px,4vw,48px)",
+						alignItems: "end",
 					}}
 				>
-					{/* Colonna sinistra */}
-					<div style={{ position: "relative", paddingLeft: 24 }}>
+					<div style={{ position: "relative" }}>
 						<ScrollReveal variant="fadeIn" delay={0.05}>
 							<span
 								style={{
@@ -77,14 +98,17 @@ export function ApplicationsSection() {
 									lineHeight: 1.05,
 									color: "white",
 									margin: 0,
+									maxWidth: 600,
 								}}
 							/>
 						</div>
+					</div>
 
+					<div className="applications-right" style={{ paddingTop: 14 }}>
 						<ScrollReveal variant="fadeUp" delay={0.5}>
 							<p
 								style={{
-									marginTop: 24,
+									marginTop: 0,
 									marginBottom: 0,
 									fontSize: "var(--text-base)",
 									color: "white",
@@ -98,72 +122,52 @@ export function ApplicationsSection() {
 							</p>
 						</ScrollReveal>
 					</div>
+				</div>
 
-					{/* Colonna destra */}
-					<div>
+				<div style={{ marginTop: 32, overflow: "hidden" }}>
+					<ScrollReveal variant="fadeIn" delay={0.15}>
 						<div
-							style={{
-								display: "grid",
-								gridTemplateColumns: "repeat(3, 1fr)",
-								gap: 14,
-							}}
+							className="applications-marquee"
+							style={{ display: "flex", width: "max-content", gap: 14 }}
 						>
-							{APPS.map((item, i) => {
+							{MARQUEE_ITEMS.map((item, i) => {
 								const Icon = item.icon;
 								return (
-									<ScrollReveal
-										key={item.label}
-										variant="fadeUp"
-										delay={i * 0.08}
+									<div
+										key={`${item.label}-${i}`}
+										className="applications-card"
+										style={{
+											minWidth: 240,
+											minHeight: 200,
+											display: "flex",
+											flexDirection: "column",
+											alignItems: "center",
+											justifyContent: "center",
+											gap: 12,
+											padding: "clamp(16px,2vw,24px)",
+											background: "color-mix(in srgb, white 8%, transparent)",
+											flexShrink: 0,
+										}}
 									>
-										<div
+										<Icon
+											size={48}
+											style={{ color: "var(--accent)", flexShrink: 0 }}
+										/>
+										<span
 											style={{
-												display: "flex",
-												flexDirection: "column",
-												alignItems: "flex-start",
-												gap: 12,
-												padding: "clamp(16px,2vw,24px)",
-												background: "color-mix(in srgb, white 8%, transparent)",
+												fontSize: "var(--text-sm)",
+												fontWeight: 500,
+												color: "white",
+												lineHeight: 1.4,
 											}}
 										>
-											<Icon
-												size={32}
-												style={{
-													color: "var(--accent)",
-													flexShrink: 0,
-												}}
-											/>
-											<span
-												style={{
-													fontSize: "var(--text-sm)",
-													fontWeight: 500,
-													color: "white",
-													lineHeight: 1.4,
-												}}
-											>
-												{item.label}
-											</span>
-										</div>
-									</ScrollReveal>
+											{item.label}
+										</span>
+									</div>
 								);
 							})}
 						</div>
-
-						<ScrollReveal variant="fadeIn" delay={0.6}>
-							<p
-								style={{
-									marginTop: 24,
-									marginBottom: 0,
-									fontSize: "var(--text-xs)",
-									color: "white",
-									letterSpacing: "0.04em",
-								}}
-							>
-								Fisiatri · Ortopedici · Podologi · Fisioterapisti · Neurologi ·
-								Medici dello Sport
-							</p>
-						</ScrollReveal>
-					</div>
+					</ScrollReveal>
 				</div>
 			</section>
 		</>

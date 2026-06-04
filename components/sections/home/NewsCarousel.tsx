@@ -12,7 +12,9 @@ const sectionPad: React.CSSProperties = {
 };
 
 export function NewsCarousel() {
-	const items = Object.values(NEWS_DATA).sort((a, b) => (a.date < b.date ? 1 : -1));
+	const items = Object.values(NEWS_DATA).sort((a, b) =>
+		a.date < b.date ? 1 : -1,
+	);
 
 	return (
 		<section
@@ -23,7 +25,7 @@ export function NewsCarousel() {
 				overflow: "hidden",
 			}}
 		>
-			<div style={{ maxWidth: 1400, marginInline: "auto", width: "100%" }}>
+			<div style={{ marginInline: "auto", width: "100%" }}>
 				<div
 					style={{
 						display: "flex",
@@ -66,16 +68,49 @@ export function NewsCarousel() {
 						/>
 					</div>
 					<div style={{ display: "flex", gap: 12, flexShrink: 0 }}>
-						<button aria-label="News precedenti" style={{ width: 48, height: 48, border: "1px solid var(--primary)", background: "var(--background)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--primary)" }}>
+						<button
+							aria-label="News precedenti"
+							style={{
+								width: 48,
+								height: 48,
+								border: "1px solid var(--primary)",
+								background: "var(--background)",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								cursor: "pointer",
+								color: "var(--primary)",
+							}}
+						>
 							<ChevronLeft size={18} />
 						</button>
-						<button aria-label="News successive" style={{ width: 48, height: 48, border: "1px solid var(--primary)", background: "var(--background)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", color: "var(--primary)" }}>
+						<button
+							aria-label="News successive"
+							style={{
+								width: 48,
+								height: 48,
+								border: "1px solid var(--primary)",
+								background: "var(--background)",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+								cursor: "pointer",
+								color: "var(--primary)",
+							}}
+						>
 							<ChevronRight size={18} />
 						</button>
 					</div>
 				</div>
 
-				<div style={{ overflowX: "auto", overflowY: "hidden", WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}>
+				<div
+					style={{
+						overflowX: "auto",
+						overflowY: "hidden",
+						WebkitOverflowScrolling: "touch",
+						scrollbarWidth: "none",
+					}}
+				>
 					<motion.div
 						initial={{ opacity: 0, y: 18 }}
 						whileInView={{ opacity: 1, y: 0 }}
@@ -88,15 +123,86 @@ export function NewsCarousel() {
 						}}
 					>
 						{items.map((item) => (
-							<Link key={item.id} href={`/news/${item.slug}`} style={{ textDecoration: "none", color: "inherit", flex: "0 0 clamp(280px, 85vw, 420px)" }}>
-								<article style={{ backgroundColor: "white", padding: "clamp(12px, 2vw, 20px)", display: "flex", flexDirection: "column" }}>
-									<div style={{ aspectRatio: "1 / 1", backgroundImage: item.image ? `url(${item.image})` : undefined, backgroundSize: "cover", backgroundRepeat: "no-repeat", backgroundPosition: "center center", marginBottom: 20 }} />
-									<span style={{ fontSize: "var(--text-xs)", letterSpacing: "0.08em", textTransform: "uppercase", color: "white", backgroundColor: "var(--secondary)", padding: "6px 14px", display: "inline-block", alignSelf: "flex-start" }}>{item.category}</span>
-									<h3 style={{ fontSize: "var(--text-xl)", fontWeight: 500, color: "var(--primary)", margin: "12px 0px 0px" }}>{item.title}</h3>
-									<p style={{ margin: 0, fontSize: "var(--text-sm)", lineHeight: 1.6, color: "var(--muted-foreground)", marginTop: 16 }}>{item.excerpt}</p>
-									<div style={{ marginTop: 24, display: "inline-flex", alignItems: "center", gap: 8, fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--primary)" }}>
+							<Link
+								key={item.id}
+								href={`/news/${item.slug}`}
+								style={{
+									textDecoration: "none",
+									color: "inherit",
+									flex: "0 0 clamp(280px, 85vw, 420px)",
+								}}
+							>
+								<article
+									style={{
+										backgroundColor: "white",
+										padding: "clamp(12px, 2vw, 20px)",
+										display: "flex",
+										flexDirection: "column",
+									}}
+								>
+									<div
+										style={{
+											aspectRatio: "4 / 3",
+											backgroundImage: item.image
+												? `url(${item.image})`
+												: undefined,
+											backgroundSize: "cover",
+											backgroundRepeat: "no-repeat",
+											backgroundPosition: "center center",
+											marginBottom: 20,
+										}}
+									/>
+									<span
+										style={{
+											fontSize: "var(--text-xs)",
+											letterSpacing: "0.08em",
+											textTransform: "uppercase",
+											color: "white",
+											backgroundColor: "var(--secondary)",
+											padding: "6px 14px",
+											display: "inline-block",
+											alignSelf: "flex-start",
+										}}
+									>
+										{item.category}
+									</span>
+									<h3
+										style={{
+											fontSize: "var(--text-lg)",
+											fontWeight: 500,
+											color: "var(--primary)",
+											margin: "12px 0px 0px",
+											lineHeight: 1.2,
+										}}
+									>
+										{item.title}
+									</h3>
+									<p
+										style={{
+											margin: 0,
+											fontSize: "var(--text-sm)",
+											lineHeight: 1.6,
+											color: "var(--muted-foreground)",
+											marginTop: 16,
+										}}
+									>
+										{item.excerpt}
+									</p>
+									<div
+										style={{
+											marginTop: 24,
+											display: "inline-flex",
+											alignItems: "center",
+											gap: 8,
+											fontSize: "var(--text-sm)",
+											fontWeight: 600,
+											color: "var(--primary)",
+										}}
+									>
 										Scopri
-										<span style={{ display: "inline-flex", transform: "none" }}>→</span>
+										<span style={{ display: "inline-flex", transform: "none" }}>
+											→
+										</span>
 									</div>
 								</article>
 							</Link>

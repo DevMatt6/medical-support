@@ -35,7 +35,30 @@ export function SoftwareSection() {
 			}}
 		>
 			{/* Contenuto */}
-			<div style={{ position: "relative", zIndex: 1 }}>
+			<div
+				style={{
+					position: "relative",
+					zIndex: 1,
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+				}}
+			>
+				<ScrollReveal variant="fadeIn" delay={0.05}>
+					<span
+						style={{
+							fontSize: "var(--text-xs)",
+							letterSpacing: "0.08em",
+							textTransform: "uppercase",
+							color: "white",
+							display: "inline-block",
+							backgroundColor: "var(--secondary)",
+							padding: "6px 14px",
+						}}
+					>
+						new bms
+					</span>
+				</ScrollReveal>
 				{/* Heading */}
 				<ScrollReveal variant="fadeUp" delay={0.05}>
 					<div style={{ textAlign: "center" }}>
@@ -50,7 +73,7 @@ export function SoftwareSection() {
 								margin: 0,
 							}}
 						>
-							New BMS — Il software che dà voce ai dati
+							Il software che dà voce ai dati
 						</SplitText>
 					</div>
 				</ScrollReveal>
@@ -72,7 +95,9 @@ export function SoftwareSection() {
 						preciso.
 					</p>
 				</ScrollReveal>
+			</div>
 
+			<div style={{ position: "relative", zIndex: 1 }}>
 				{/* 2-column grid: immagine + feature */}
 				<div
 					style={{

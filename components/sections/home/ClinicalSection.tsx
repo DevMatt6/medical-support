@@ -27,9 +27,7 @@ export function ClinicalSection() {
 					paddingInline: "clamp(24px,5vw,80px)",
 				}}
 			>
-				<div
-					style={{ maxWidth: "1400px", marginInline: "auto", width: "100%" }}
-				>
+				<div style={{ marginInline: "auto", width: "100%" }}>
 					<div
 						className="clinical-grid"
 						style={{

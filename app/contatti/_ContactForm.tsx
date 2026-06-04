@@ -296,7 +296,7 @@ export function ContactForm() {
 						+39 347 518 3978
 					</a>
 					<a
-						href="mailto:info@medical-support.it"
+						href="mailto:commerciale@medical-support.it"
 						style={{
 							fontSize: "var(--text-sm)",
 							color: "var(--muted-foreground)",
@@ -306,7 +306,7 @@ export function ContactForm() {
 							textDecoration: "none",
 						}}
 					>
-						info@medical-support.it
+						commerciale@medical-support.it
 					</a>
 					<span
 						style={{
@@ -323,7 +323,7 @@ export function ContactForm() {
 					</span>
 					<img
 						src="/images/partner/logo-confimea.svg"
-						alt="Partner CONFIIMEA Sanità"
+						alt="Partner CONFIMEA Sanità"
 						style={{ display: "block", height: 50 }}
 					/>
 				</div>

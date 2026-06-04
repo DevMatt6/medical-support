@@ -85,7 +85,6 @@ export default async function NewsDetail({
 						marginTop: 18,
 						marginBottom: 0,
 						fontSize: "var(--text-lg)",
-						lineHeight: 1.6,
 						color: "var(--muted-foreground)",
 						maxWidth: 820,
 					}}
@@ -129,6 +128,7 @@ export default async function NewsDetail({
 						gridTemplateColumns: "minmax(0, 1fr)",
 						gap: 20,
 						maxWidth: 860,
+						marginInline: "auto",
 					}}
 				>
 					{item.content.map((paragraph, index) => (
