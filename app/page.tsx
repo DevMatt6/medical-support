@@ -5,6 +5,7 @@ import { ProductsSection } from "@/components/sections/home/ProductsSection";
 import { ApplicationsSection } from "@/components/sections/home/ApplicationsSection";
 import { SoftwareSection } from "@/components/sections/home/SoftwareSection";
 import { ClinicalSection } from "@/components/sections/home/ClinicalSection";
+import { NewsCarousel } from "@/components/sections/home/NewsCarousel";
 import { CTASection } from "@/components/sections/home/CTASection";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
 			<ApplicationsSection />
 			<SoftwareSection />
 			<ClinicalSection />
+			<NewsCarousel />
 			<CTASection />
 		</>
 	);

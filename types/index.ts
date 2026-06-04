@@ -16,6 +16,21 @@ export interface Product {
 	image?: string;
 }
 
+export interface NewsItem {
+	id: string;
+	slug: string;
+	title: string;
+	subtitle?: string;
+	excerpt: string;
+	content: string[];
+	category: "evento" | "novità" | "company" | "clinica";
+	date: string;
+	image?: string;
+	agent?: string;
+	location?: string;
+	endDate?: string;
+}
+
 export interface SiteConfig {
 	name: string;
 	description: string;
