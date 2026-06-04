@@ -19,7 +19,7 @@ export const NEWS_DATA: Record<string, NewsItem> = {
 			"Il valore più importante è quello della prevenzione: non aspettare che il problema si manifesti, ma imparare a riconoscere in anticipo i comportamenti che aiutano il corpo a lavorare meglio. Questo approccio è utile per i più piccoli, ma rappresenta un invito valido per chiunque voglia prendersi cura del proprio benessere nel tempo.",
 			"Con iniziative come questa, Medical Support conferma il proprio impegno nel coniugare innovazione, informazione e responsabilità sociale, portando avanti un'idea di salute che parte dalla conoscenza e arriva alla vita quotidiana.",
 		],
-		category: "Progetti",
+		category: "progetti",
 		date: "2026-06-04",
 		image: "/images/news/prevenzione-e-postura.jpg",
 	},
