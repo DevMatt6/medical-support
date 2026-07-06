@@ -242,16 +242,19 @@ export function ProductsSection() {
 	const products = siteConfig.products;
 	const CARD_WIDTH = 420;
 	const GAP = 24;
-	const STEP = CARD_WIDTH + GAP;
 	const COUNT = products.length;
 
 	// Triplo array per l'effetto infinito
 	const loopedProducts = useMemo(
-		() => [...products, ...products, ...products],
+		() => [...products, ...products, ...products, ...products, ...products],
 		[products],
 	);
 
-	const x = useMotionValue(-(COUNT * STEP)); // inizia alla copia centrale
+	const [step, setStep] = useState(CARD_WIDTH + GAP);
+	const stepRef = useRef(CARD_WIDTH + GAP);
+	const cardRef = useRef<HTMLDivElement>(null);
+
+	const x = useMotionValue(-(COUNT * (CARD_WIDTH + GAP))); // inizia alla copia centrale
 	const [isDragging, setIsDragging] = useState(false);
 	const [, setActiveIndex] = useState(0);
 	const virtualRef = useRef<number>(COUNT); // posizione virtuale nel triplo array
@@ -266,37 +269,55 @@ export function ProductsSection() {
 	// Aggiorna il dot attivo durante il drag
 	useEffect(() => {
 		const unsubscribe = x.on("change", (val) => {
-			const idx = Math.round(-val / STEP);
+			const idx = Math.round(-val / stepRef.current);
 			const logical = ((idx % COUNT) + COUNT) % COUNT;
 			setActiveIndex(logical);
 		});
 		return () => unsubscribe();
-	}, [x, COUNT, STEP]);
+	}, [x, COUNT]);
+
+	// Misura la larghezza reale della card e ricalcola lo step al resize
+	useEffect(() => {
+		if (!cardRef.current) return;
+		const measure = () => {
+			if (!cardRef.current) return;
+			const w = cardRef.current.offsetWidth + GAP;
+			stepRef.current = w;
+			setStep(w);
+			const logical = ((virtualRef.current % COUNT) + COUNT) % COUNT;
+			const normalized = COUNT + logical;
+			virtualRef.current = normalized;
+			x.set(-(normalized * w));
+		};
+		const ro = new ResizeObserver(measure);
+		ro.observe(cardRef.current);
+		return () => ro.disconnect();
+	}, [x, COUNT, GAP]);
 
 	// Dopo ogni navigazione, teletrasporta silenziosamente alla copia centrale
 	const normalizeToMiddle = useCallback(() => {
-		const rawIdx = Math.round(-x.get() / STEP);
+		const rawIdx = Math.round(-x.get() / stepRef.current);
 		const logical = ((rawIdx % COUNT) + COUNT) % COUNT;
 		const normalized = COUNT + logical;
 		if (rawIdx !== normalized) {
-			x.set(-(normalized * STEP));
+			x.set(-(normalized * stepRef.current));
 			virtualRef.current = normalized;
 		}
-	}, [x, COUNT, STEP]);
+	}, [x, COUNT]);
 
 	const goToVirtual = useCallback(
 		(virtualIdx: number) => {
 			virtualRef.current = virtualIdx;
 			const logical = ((virtualIdx % COUNT) + COUNT) % COUNT;
 			setActiveIndex(logical);
-			animate(x, -(virtualIdx * STEP), {
+			animate(x, -(virtualIdx * stepRef.current), {
 				type: "spring",
 				stiffness: 300,
 				damping: 30,
 				onComplete: normalizeToMiddle,
 			});
 		},
-		[x, COUNT, STEP, normalizeToMiddle],
+		[x, COUNT, normalizeToMiddle],
 	);
 
 	const handlePrev = useCallback(
@@ -310,22 +331,26 @@ export function ProductsSection() {
 
 	const handleDragEnd = useCallback(() => {
 		setIsDragging(false);
-		const rawIdx = Math.round(-x.get() / STEP);
+		const rawIdx = Math.round(-x.get() / stepRef.current);
 		const clamped = Math.max(0, Math.min(loopedProducts.length - 1, rawIdx));
 		virtualRef.current = clamped;
-		animate(x, -(clamped * STEP), {
+		animate(x, -(clamped * stepRef.current), {
 			type: "spring",
 			stiffness: 300,
 			damping: 30,
 			onComplete: normalizeToMiddle,
 		});
-	}, [x, STEP, loopedProducts.length, normalizeToMiddle]);
+	}, [x, loopedProducts.length, normalizeToMiddle]);
 
 	return (
 		<>
 			<style>{`
 				.products-drag-track { cursor: grab; }
 				.products-drag-track:active { cursor: grabbing; }
+				.product-card-wrapper { width: clamp(280px,35vw,420px); }
+				@media (max-width: 768px) {
+					.product-card-wrapper { width: calc(100vw - clamp(24px,5vw,80px)); }
+				}
 			`}</style>
 			<section
 				style={{
@@ -369,7 +394,7 @@ export function ProductsSection() {
 						className="products-drag-track"
 						drag="x"
 						dragConstraints={{
-							left: -((loopedProducts.length - 1) * STEP),
+							left: -((loopedProducts.length - 1) * step),
 							right: 0,
 						}}
 						dragElastic={0.05}
@@ -387,8 +412,9 @@ export function ProductsSection() {
 						{loopedProducts.map((product, i) => (
 							<div
 								key={`${product.id}-${Math.floor(i / COUNT)}`}
+								ref={i === 0 ? cardRef : undefined}
+								className="product-card-wrapper"
 								style={{
-									width: "clamp(280px,35vw,420px)",
 									flexShrink: 0,
 									pointerEvents: isDragging ? "none" : "auto",
 								}}

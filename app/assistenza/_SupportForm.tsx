@@ -4,6 +4,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SplitText } from "@/components/ui/SplitText";
 
+const ASSISTENZA_EMAIL = "commerciale@medical-support.org";
+
 /* ─── Opzioni select ────────────────────────────────────────────── */
 const SISTEMI = [
 	"",
@@ -86,7 +88,7 @@ const initialState: FormState = {
 };
 
 /* ════════════════════════════════════════════════════════════════ */
-/*  COMPONENTE                                                      */
+/*  COMPONENTE                                                     */
 /* ════════════════════════════════════════════════════════════════ */
 export function SupportForm() {
 	const [form, setForm] = useState<FormState>(initialState);
@@ -119,22 +121,70 @@ export function SupportForm() {
 		return errs;
 	}
 
-	function handleSubmit(e: React.FormEvent) {
+	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 		const errs = validate();
+
 		if (Object.keys(errs).length > 0) {
 			setErrors(errs);
 			return;
 		}
+
 		setErrors({});
 		setLoading(true);
-		setTimeout(() => {
-			setLoading(false);
+
+		try {
+			const response = await fetch("/api/contact", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					nome: form.referente,
+					cognome: form.cliente,
+					professione: form.sistema,
+					email: form.email,
+					messaggio: [
+						"Nuova richiesta dal modulo assistenza tecnica",
+						"",
+						`Data richiesta: ${form.dataRichiesta || "-"}`,
+						`Codice cliente: ${form.codiceCliente || "-"}`,
+						`Cliente / Ragione sociale: ${form.cliente || "-"}`,
+						`Referente: ${form.referente || "-"}`,
+						`Telefono: ${form.telefono || "-"}`,
+						`Email: ${form.email || "-"}`,
+						`Orari di contatto: ${form.orariContatto || "-"}`,
+						`Sistema: ${form.sistema || "-"}`,
+						`Tipologia / Modello: ${form.tipologiaModello || "-"}`,
+						`Software: ${form.software || "-"}`,
+						`Marca computer: ${form.marcaComputer || "-"}`,
+						`Versione Windows: ${form.versioneWindows || "-"}`,
+						`Numero telecamere: ${form.numTelecamere || "-"}`,
+						`Contratto assistenza: ${form.contrattoAssistenza || "-"}`,
+						`Autorizza Supremo: ${form.autorizzaSupremo ? "Sì" : "No"}`,
+						`Dichiarazione EOL: ${form.dichiarazioneEol ? "Sì" : "No"}`,
+						"",
+						"Descrizione problematica:",
+						form.descrizione,
+						"",
+						`Destinatario previsto: ${ASSISTENZA_EMAIL}`,
+					].join("\n"),
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error("Invio non riuscito");
+			}
+
 			setSuccess(true);
-		}, 1500);
+			setForm(initialState);
+		} catch {
+			setErrors({ submit: true });
+		} finally {
+			setLoading(false);
+		}
 	}
 
-	/* ── Stile checkbox row ────────────────────────────────────────── */
 	const checkboxRowStyle: React.CSSProperties = {
 		display: "flex",
 		alignItems: "flex-start",
@@ -166,6 +216,7 @@ export function SupportForm() {
 					color: white;
 				}
 			`}</style>
+
 			<div
 				className="support-grid"
 				style={{
@@ -175,7 +226,6 @@ export function SupportForm() {
 					alignItems: "start",
 				}}
 			>
-				{/* ── SINISTRA — form ──────────────────────────────────────── */}
 				<div
 					style={{
 						padding: "clamp(32px,4vw,48px)",
@@ -220,7 +270,6 @@ export function SupportForm() {
 								initial={{ opacity: 1 }}
 								exit={{ opacity: 0 }}
 							>
-								{/* Riga: data + codice cliente */}
 								<div
 									className="support-form-row"
 									style={{
@@ -242,6 +291,7 @@ export function SupportForm() {
 											}}
 										/>
 									</div>
+
 									<div>
 										<label style={labelStyle}>Codice cliente</label>
 										<input
@@ -254,7 +304,6 @@ export function SupportForm() {
 									</div>
 								</div>
 
-								{/* Cliente / Ragione sociale */}
 								<div>
 									<label style={labelStyle}>
 										Cliente / Ragione sociale{" "}
@@ -269,7 +318,6 @@ export function SupportForm() {
 									/>
 								</div>
 
-								{/* Riga: referente + telefono */}
 								<div
 									className="support-form-row"
 									style={{
@@ -291,6 +339,7 @@ export function SupportForm() {
 											style={fieldStyle(!!errors.referente)}
 										/>
 									</div>
+
 									<div>
 										<label style={labelStyle}>
 											Recapito telefonico{" "}
@@ -306,7 +355,6 @@ export function SupportForm() {
 									</div>
 								</div>
 
-								{/* Riga: email + orari */}
 								<div
 									className="support-form-row"
 									style={{
@@ -328,6 +376,7 @@ export function SupportForm() {
 											style={fieldStyle(!!errors.email)}
 										/>
 									</div>
+
 									<div>
 										<label style={labelStyle}>Orari di contatto</label>
 										<input
@@ -341,7 +390,6 @@ export function SupportForm() {
 									</div>
 								</div>
 
-								{/* Sistema */}
 								<div>
 									<label style={labelStyle}>
 										Sistema{" "}
@@ -362,7 +410,6 @@ export function SupportForm() {
 									</select>
 								</div>
 
-								{/* Riga: tipologia + software */}
 								<div
 									className="support-form-row"
 									style={{
@@ -381,6 +428,7 @@ export function SupportForm() {
 											style={fieldStyle(false)}
 										/>
 									</div>
+
 									<div>
 										<label style={labelStyle}>Software</label>
 										<input
@@ -393,7 +441,6 @@ export function SupportForm() {
 									</div>
 								</div>
 
-								{/* Riga: marca computer + versione Windows */}
 								<div
 									className="support-form-row"
 									style={{
@@ -412,6 +459,7 @@ export function SupportForm() {
 											style={fieldStyle(false)}
 										/>
 									</div>
+
 									<div>
 										<label style={labelStyle}>Versione Windows</label>
 										<input
@@ -425,7 +473,6 @@ export function SupportForm() {
 									</div>
 								</div>
 
-								{/* Numero telecamere — visibile solo per Body Analysis Capture */}
 								{form.sistema === "Body Analysis Capture" && (
 									<div>
 										<label style={labelStyle}>Numero telecamere</label>
@@ -443,7 +490,6 @@ export function SupportForm() {
 									</div>
 								)}
 
-								{/* Descrizione problematica */}
 								<div>
 									<label style={labelStyle}>
 										Descrizione problematica{" "}
@@ -461,7 +507,6 @@ export function SupportForm() {
 									/>
 								</div>
 
-								{/* Contratto assistenza */}
 								<div>
 									<label style={labelStyle}>
 										Possiedo un contratto annuale di assistenza tecnica
@@ -478,7 +523,6 @@ export function SupportForm() {
 									</select>
 								</div>
 
-								{/* Checkbox: autorizzazione Supremo */}
 								<label style={checkboxRowStyle}>
 									<input
 										type="checkbox"
@@ -506,7 +550,6 @@ export function SupportForm() {
 									</span>
 								</label>
 
-								{/* Checkbox: dichiarazione EOL */}
 								<label style={checkboxRowStyle}>
 									<input
 										type="checkbox"
@@ -525,7 +568,29 @@ export function SupportForm() {
 									</span>
 								</label>
 
-								{/* Submit */}
+								{errors.submit && (
+									<p
+										style={{
+											color: "#fff",
+											background: "rgba(220, 38, 38, 0.18)",
+											border: "1px solid rgba(220, 38, 38, 0.45)",
+											padding: "12px 16px",
+											fontSize: "var(--text-sm)",
+											margin: 0,
+										}}
+									>
+										Si è verificato un errore durante l’invio. Scrivi
+										direttamente a{" "}
+										<a
+											href={`mailto:${ASSISTENZA_EMAIL}`}
+											style={{ color: "white", textDecoration: "underline" }}
+										>
+											{ASSISTENZA_EMAIL}
+										</a>
+										.
+									</p>
+								)}
+
 								<button
 									type="submit"
 									disabled={loading}
@@ -558,7 +623,7 @@ export function SupportForm() {
 												}}
 												style={{ display: "inline-block", marginLeft: 8 }}
 											>
-												⟳
+												↻
 											</motion.span>
 										</>
 									) : (
@@ -570,83 +635,44 @@ export function SupportForm() {
 					</AnimatePresence>
 				</div>
 
-				{/* ── DESTRA — pannello informativo ──────────────────────── */}
-				<div
-					style={{
-						padding: "clamp(32px,4vw,48px)",
-					}}
-				>
-					<SplitText
-						tag="h3"
+				<div style={{ display: "grid", gap: 24 }}>
+					<div
 						style={{
-							fontWeight: 500,
-							fontSize: "var(--text-3xl)",
-							lineHeight: 1.2,
-							margin: 0,
-							marginBottom: 24,
-							color: "var(--primary)",
+							background: "rgba(255,255,255,0.04)",
+							border: "1px solid rgba(255,255,255,0.08)",
+							padding: "clamp(24px,3vw,32px)",
 						}}
-						accentWords={["Assistenza", "tecnica"]}
-						accentColor="var(--accent)"
 					>
-						Assistenza tecnica Medical Support
-					</SplitText>
+						<SplitText
+							text="Supporto rapido, gestione precisa."
+							tag="h2"
+							style={{
+								fontSize: "clamp(28px,4vw,48px)",
+								lineHeight: 1.05,
+								margin: 0,
+								color: "white",
+								fontWeight: 500,
+								maxWidth: 12,
+							}}
+						/>
+					</div>
 
-					<p
+					<div
 						style={{
+							background: "rgba(255,255,255,0.03)",
+							border: "1px solid rgba(255,255,255,0.08)",
+							padding: "clamp(24px,3vw,32px)",
+							color: "rgba(255,255,255,0.82)",
 							fontSize: "var(--text-sm)",
-							color: "var(--muted-foreground)",
-							lineHeight: 1.65,
-							marginBottom: 24,
+							lineHeight: 1.7,
 						}}
 					>
-						Utilizza questo modulo per segnalare anomalie su sistemi hardware e
-						software Medical Support. Il nostro reparto tecnico prenderà in
-						carico la richiesta e ti ricontatterà per pianificare
-						l&apos;intervento più adeguato.
-					</p>
-
-					<ul
-						style={{
-							listStyle: "none",
-							padding: 0,
-							margin: 0,
-							display: "flex",
-							flexDirection: "column",
-							gap: 0,
-						}}
-					>
-						{[
-							"Supporto remoto tramite Supremo",
-							"Verifica configurazione software",
-							"Segnalazione malfunzionamenti hardware",
-							"Presa in carico dal reparto tecnico",
-						].map((item) => (
-							<li
-								key={item}
-								style={{
-									fontSize: "var(--text-sm)",
-									color: "var(--muted-foreground)",
-									padding: "14px 0",
-									borderBottom: "1px solid var(--border)",
-									display: "flex",
-									alignItems: "center",
-									gap: 10,
-								}}
-							>
-								<span
-									style={{
-										width: 6,
-										height: 6,
-										borderRadius: "50%",
-										background: "var(--accent)",
-										flexShrink: 0,
-									}}
-								/>
-								{item}
-							</li>
-						))}
-					</ul>
+						<p style={{ margin: 0 }}>
+							Compila il modulo con tutti i dettagli tecnici disponibili. La
+							richiesta verrà inoltrata al reparto commerciale e assistenza per
+							la presa in carico.
+						</p>
+					</div>
 				</div>
 			</div>
 		</>
