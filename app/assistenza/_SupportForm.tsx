@@ -134,7 +134,7 @@ export function SupportForm() {
 		setLoading(true);
 
 		try {
-			const response = await fetch("/api/contact", {
+			const response = await fetch("/api/support", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -142,8 +142,11 @@ export function SupportForm() {
 				body: JSON.stringify({
 					nome: form.referente,
 					cognome: form.cliente,
-					professione: form.sistema,
 					email: form.email,
+					telefono: form.telefono,
+					cliente: form.cliente,
+					referente: form.referente,
+					sistema: form.sistema,
 					messaggio: [
 						"Nuova richiesta dal modulo assistenza tecnica",
 						"",
