@@ -7,7 +7,6 @@ export async function POST(req: Request) {
 	try {
 		const {
 			nome,
-			cognome,
 			email,
 			messaggio,
 			telefono,

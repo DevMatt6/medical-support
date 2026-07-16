@@ -7,8 +7,12 @@ import Image from "next/image";
 import { SplitText } from "@/components/ui/SplitText";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { useRouteLocale } from "@/lib/route-locale";
+import { homeCopy } from "@/lib/home-copy";
 
 export function HeroSection() {
+	const locale = useRouteLocale();
+	const copy = homeCopy.hero[locale];
 	const { scrollY } = useScroll();
 	const bgY = useTransform(scrollY, [0, 600], ["0%", "5%"]);
 	return (
@@ -75,7 +79,7 @@ export function HeroSection() {
 						accentWords={["diagnostica", "3D"]}
 						accentColor="var(--accent)"
 					>
-						L&apos;innovazione della diagnostica 3D
+						{copy.headline}
 					</SplitText>
 				</div>
 
@@ -91,8 +95,7 @@ export function HeroSection() {
 							lineHeight: 1.6,
 						}}
 					>
-						Sistemi biometrici certificati CE per fisiatri, ortopedici e
-						podologi. Dai dati alla diagnosi, in tempo reale.
+						{copy.subheadline}
 					</p>
 				</ScrollReveal>
 
@@ -108,7 +111,7 @@ export function HeroSection() {
 					>
 						<MagneticButton
 							as="a"
-							href="/contatti"
+							href={`/${locale}/contatti`}
 							style={{
 								padding: "14px 36px",
 								background: "var(--primary)",
@@ -117,10 +120,10 @@ export function HeroSection() {
 								fontWeight: 600,
 							}}
 						>
-							Richiedi una Demo
+							{copy.ctaPrimary}
 						</MagneticButton>
 						<Link
-							href="/prodotti"
+							href={`/${locale}/prodotti`}
 							style={{
 								fontSize: "var(--text-sm)",
 								color: "var(--secondary)",
@@ -128,7 +131,7 @@ export function HeroSection() {
 								fontWeight: 500,
 							}}
 						>
-							Esplora i prodotti →
+							{copy.ctaSecondary}
 						</Link>
 					</div>
 				</ScrollReveal>

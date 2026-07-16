@@ -4,31 +4,27 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export function CustomCursor() {
-	const [mounted, setMounted] = useState(false);
 	const [isTouch, setIsTouch] = useState(false);
 	const [isHovered, setIsHovered] = useState(false);
 
-	// Dot position — direct, no spring
 	const dotX = useMotionValue(-100);
 	const dotY = useMotionValue(-100);
-
-	// Ring position — spring follow
 	const rawX = useMotionValue(-100);
 	const rawY = useMotionValue(-100);
 	const ringX = useSpring(rawX, { stiffness: 150, damping: 20 });
 	const ringY = useSpring(rawY, { stiffness: 150, damping: 20 });
 
-	// Mount + touch detection
 	useEffect(() => {
-		setMounted(true);
-		if (window.matchMedia("(hover: none)").matches) {
-			setIsTouch(true);
-		}
+		const mq = window.matchMedia("(hover: none)");
+		const updateTouch = () => setIsTouch(mq.matches);
+
+		updateTouch();
+		mq.addEventListener("change", updateTouch);
+		return () => mq.removeEventListener("change", updateTouch);
 	}, []);
 
-	// Mouse move
 	useEffect(() => {
-		if (!mounted || isTouch) return;
+		if (isTouch) return;
 
 		const onMove = (e: MouseEvent) => {
 			dotX.set(e.clientX);
@@ -39,18 +35,12 @@ export function CustomCursor() {
 
 		window.addEventListener("mousemove", onMove);
 		return () => window.removeEventListener("mousemove", onMove);
-	}, [mounted, isTouch, dotX, dotY, rawX, rawY]);
+	}, [isTouch, dotX, dotY, rawX, rawY]);
 
-	// Hover detection on interactive elements
 	useEffect(() => {
-		if (!mounted || isTouch) return;
+		if (isTouch) return;
 
-		const targets = Array.from(
-			document.querySelectorAll<HTMLElement>(
-				'a, button, [data-cursor="hover"]',
-			),
-		);
-
+		const targets = Array.from(document.querySelectorAll<HTMLElement>('a, button, [data-cursor="hover"]'));
 		const onEnter = () => setIsHovered(true);
 		const onLeave = () => setIsHovered(false);
 
@@ -65,22 +55,21 @@ export function CustomCursor() {
 				el.removeEventListener("mouseleave", onLeave);
 			});
 		};
-	}, [mounted, isTouch]);
+	}, [isTouch]);
 
-	// Hide native cursor on desktop
 	useEffect(() => {
-		if (!mounted || isTouch) return;
+		if (isTouch) return;
+		const originalCursor = document.body.style.cursor;
 		document.body.style.cursor = "none";
 		return () => {
-			document.body.style.cursor = "";
+			document.body.style.cursor = originalCursor;
 		};
-	}, [mounted, isTouch]);
+	}, [isTouch]);
 
-	if (!mounted || isTouch) return null;
+	if (isTouch) return null;
 
 	return (
 		<>
-			{/* Dot — follows cursor directly */}
 			<motion.div
 				style={{
 					position: "fixed",
@@ -101,7 +90,6 @@ export function CustomCursor() {
 				transition={{ duration: 0.2 }}
 			/>
 
-			{/* Ring — spring follow */}
 			<motion.div
 				style={{
 					position: "fixed",

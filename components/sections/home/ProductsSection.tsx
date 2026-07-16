@@ -12,15 +12,19 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { SplitText } from "@/components/ui/SplitText";
 import type { Product } from "@/types/index";
+import { localize } from "@/lib/i18n";
+import { useRouteLocale } from "@/lib/route-locale";
 
 interface ProductsHeaderProps {
 	onPrev: () => void;
 	onNext: () => void;
+	locale: "it" | "en";
 }
 
 const ProductsHeader = React.memo(function ProductsHeader({
 	onPrev,
 	onNext,
+	locale,
 }: ProductsHeaderProps) {
 	return (
 		<div
@@ -43,10 +47,10 @@ const ProductsHeader = React.memo(function ProductsHeader({
 						padding: "6px 14px",
 					}}
 				>
-					Linea Cristal
+					{locale === "it" ? "Linea Cristal" : "Cristal Line"}
 				</span>
 				<SplitText
-					text="Cinque strumenti per una diagnostica completa."
+					text={locale === "it" ? "Cinque strumenti per una diagnostica completa." : "Five tools for complete diagnostics."}
 					tag="h2"
 					stagger={0.04}
 					delay={0.15}
@@ -67,7 +71,7 @@ const ProductsHeader = React.memo(function ProductsHeader({
 			<div style={{ display: "flex", gap: 12, flexShrink: 0 }}>
 				<button
 					onClick={onPrev}
-					aria-label="Prodotto precedente"
+					aria-label={locale === "it" ? "Prodotto precedente" : "Previous product"}
 					style={{
 						width: 48,
 						height: 48,
@@ -86,7 +90,7 @@ const ProductsHeader = React.memo(function ProductsHeader({
 				</button>
 				<button
 					onClick={onNext}
-					aria-label="Prodotto successivo"
+					aria-label={locale === "it" ? "Prodotto successivo" : "Next product"}
 					style={{
 						width: 48,
 						height: 48,
@@ -108,7 +112,7 @@ const ProductsHeader = React.memo(function ProductsHeader({
 	);
 });
 
-function ProductCard({ product, index }: { product: Product; index: number }) {
+function ProductCard({ product, index, locale }: { product: Product; index: number; locale: "it" | "en" }) {
 	const [hovered, setHovered] = useState(false);
 
 	return (
@@ -158,7 +162,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 					alignSelf: "flex-start",
 				}}
 			>
-				Cristal
+				{locale === "it" ? "Cristal" : "Cristal"}
 			</span>
 
 			{/* Nome prodotto */}
@@ -170,7 +174,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 					margin: "12px 0 0",
 				}}
 			>
-				{product.name}
+				{localize(product.name)}
 			</h3>
 
 			{/* Descrizione 
@@ -195,9 +199,9 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 					marginTop: 16,
 				}}
 			>
-				{product.badges.slice(0, 3).map((badge) => (
+				{product.badges.slice(0, 3).map((badge, badgeIndex) => (
 					<span
-						key={badge}
+						key={`${product.id}-badge-${badgeIndex}`}
 						style={{
 							display: "inline-flex",
 							padding: "4px 10px",
@@ -206,14 +210,14 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 							color: "var(--primary)",
 						}}
 					>
-						{badge}
+						{typeof badge === "string" ? badge : localize(badge, locale)}
 					</span>
 				))}
 			</div>
 
 			{/* Link Scopri */}
 			<Link
-				href={`/prodotti/${product.slug}`}
+				href={`/${locale}/prodotti/${product.slug}`}
 				style={{
 					marginTop: 24,
 					display: "inline-flex",
@@ -225,7 +229,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 					textDecoration: "none",
 				}}
 			>
-				Scopri
+				{locale === "it" ? "Scopri" : "Discover"}
 				<motion.span
 					animate={{ x: hovered ? 6 : 0 }}
 					transition={{ duration: 0.2, ease: "easeOut" }}
@@ -239,7 +243,15 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 }
 
 export function ProductsSection() {
-	const products = siteConfig.products;
+	const locale = useRouteLocale();
+	const products = useMemo(
+		() =>
+			siteConfig.products.map((product) => ({
+				...product,
+				badges: product.badges.map((badge) => localize(badge, locale)),
+			})),
+		[locale],
+	);
 	const CARD_WIDTH = 420;
 	const GAP = 24;
 	const COUNT = products.length;
@@ -360,7 +372,7 @@ export function ProductsSection() {
 				}}
 			>
 				{/* Header */}
-				<ProductsHeader onPrev={handlePrev} onNext={handleNext} />
+				<ProductsHeader onPrev={handlePrev} onNext={handleNext} locale={locale} />
 
 				{/* Drag hint */}
 				<motion.div
@@ -419,7 +431,7 @@ export function ProductsSection() {
 									pointerEvents: isDragging ? "none" : "auto",
 								}}
 							>
-								<ProductCard product={product} index={i % COUNT} />
+								<ProductCard product={product} index={i % COUNT} locale={locale} />
 							</div>
 						))}
 					</motion.div>

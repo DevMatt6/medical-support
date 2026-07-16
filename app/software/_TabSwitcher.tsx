@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { type Locale } from "@/lib/i18n";
 
-const TABS = [
+const TABS = {
+	it: [
 	{
 		id: "new-bms",
 		label: "New BMS",
@@ -56,11 +58,67 @@ const TABS = [
 			"Storico completo delle sessioni con andamento nel tempo",
 		],
 	},
-] as const;
+],
+	en: [
+		{
+			id: "new-bms",
+			label: "New BMS",
+			image: "/images/software/new-bms.jpg",
+			title: "Integrated diagnostic platform",
+			description:
+				"New BMS is the core of the Medical Support ecosystem: a software platform that brings all diagnostic modules together in a single workspace designed for modern clinical practice.",
+			features: [
+				"Static and dynamic plantar load analysis",
+				"Clinical reports in PDF and DICOM formats",
+				"Cloud synchronization with TELEPOSTUROLOGIA",
+			],
+		},
+		{
+			id: "rebiodes",
+			label: "RebioDes",
+			image: "/images/software/rebiodes.jpg",
+			title: "Biofeedback rehabilitation",
+			description:
+				"RebioDes is the module dedicated to postural rehabilitation through customizable biofeedback protocols, with real-time visualization of pressure parameters.",
+			features: [
+				"Customizable training protocols for each patient",
+				"Real-time display of load distribution",
+				"Session data export in CSV and PDF",
+			],
+		},
+		{
+			id: "teleposturologia",
+			label: "TELEPOSTUROLOGIA",
+			image: "/images/software/teleposturologia.jpg",
+			title: "Cloud platform for posturology",
+			description:
+				"TELEPOSTUROLOGIA is the cloud platform that enables remote access to clinical data, report sharing between professionals, and secure patient record management.",
+			features: [
+				"Remote access to reports from any device",
+				"Secure report sharing with colleagues or patients",
+				"GDPR-compliant infrastructure with end-to-end encryption",
+			],
+		},
+		{
+			id: "biofeedback",
+			label: "Biofeedback",
+			image: "/images/software/biofeedback.jpg",
+			title: "Real-time visual feedback",
+			description:
+				"The Biofeedback module gives the patient immediate visual feedback on their posture during training, helping support the active correction of imbalances.",
+			features: [
+				"Postural training with instant visual feedback",
+				"Gamification mode to increase patient compliance",
+				"Complete session history with progress over time",
+			],
+		},
+	],
+} as const;
 
-export function TabSwitcher() {
-	const [active, setActive] = useState<string>(TABS[0].id);
-	const current = TABS.find((t) => t.id === active)!;
+export function TabSwitcher({ locale }: { locale: Locale }) {
+	const tabs = TABS[locale] ?? TABS.it;
+	const [active, setActive] = useState<string>(tabs[0].id);
+	const current = tabs.find((t) => t.id === active) ?? tabs[0];
 
 	return (
 		<>
@@ -86,7 +144,7 @@ export function TabSwitcher() {
 						marginBottom: "clamp(40px,5vw,64px)",
 					}}
 				>
-					{TABS.map((tab) => (
+					{tabs.map((tab) => (
 						<button
 							key={tab.id}
 							onClick={() => setActive(tab.id)}

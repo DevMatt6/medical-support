@@ -10,23 +10,35 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
+import { useRouteLocale } from "@/lib/route-locale";
 
 interface AppItem {
 	icon: LucideIcon;
 	label: string;
 }
 
-const APPS: AppItem[] = [
-	{ icon: Hospital, label: "Cliniche e Ospedali" },
-	{ icon: GraduationCap, label: "Università e Ricerca" },
-	{ icon: Stethoscope, label: "Studi Medici Specialistici" },
-	{ icon: Activity, label: "Centri Sportivi e Riabilitativi" },
-	{ icon: Building2, label: "Centri Podologici" },
-];
-
-const MARQUEE_ITEMS = [...APPS, ...APPS, ...APPS];
+const APPLICATIONS: Record<"it" | "en", AppItem[]> = {
+	it: [
+		{ icon: Hospital, label: "Cliniche e Ospedali" },
+		{ icon: GraduationCap, label: "Università e Ricerca" },
+		{ icon: Stethoscope, label: "Studi Medici Specialistici" },
+		{ icon: Activity, label: "Centri Sportivi e Riabilitativi" },
+		{ icon: Building2, label: "Centri Podologici" },
+	],
+	en: [
+		{ icon: Hospital, label: "Clinics and Hospitals" },
+		{ icon: GraduationCap, label: "Universities and Research" },
+		{ icon: Stethoscope, label: "Specialist Medical Practices" },
+		{ icon: Activity, label: "Sports and Rehabilitation Centers" },
+		{ icon: Building2, label: "Podiatry Centers" },
+	],
+};
 
 export function ApplicationsSection() {
+	const locale = useRouteLocale();
+	const apps = APPLICATIONS[locale];
+	const marqueeItems = [...apps, ...apps, ...apps];
+
 	return (
 		<>
 			<style>{`
@@ -82,14 +94,18 @@ export function ApplicationsSection() {
 									padding: "6px 14px",
 								}}
 							>
-								Ambiti di Applicazione
+								{locale === "it" ? "Ambiti di Applicazione" : "Application Areas"}
 							</span>
 						</ScrollReveal>
 
 						<div style={{ marginTop: 24 }}>
 							<SplitText
 								tag="h2"
-								text="Dove viene utilizzata la tecnologia Medical Support"
+								text={
+									locale === "it"
+										? "Dove viene utilizzata la tecnologia Medical Support"
+										: "Where Medical Support technology is used"
+								}
 								stagger={0.03}
 								delay={0.2}
 								style={{
@@ -116,9 +132,9 @@ export function ApplicationsSection() {
 									lineHeight: 1.3,
 								}}
 							>
-								Adottata da oltre 5.000 professionisti in tutto il mondo, la
-								Linea Cristal è il riferimento per fisiatri, ortopedici,
-								podologi e centri sportivi d&apos;élite.
+								{locale === "it"
+									? "Adottata da oltre 5.000 professionisti in tutto il mondo, la Linea Cristal è il riferimento per fisiatri, ortopedici, podologi e centri sportivi d'élite."
+									: "Adopted by more than 5,000 professionals worldwide, the Cristal line is the reference point for physiatrists, orthopedists, podiatrists, and elite sports centers."}
 							</p>
 						</ScrollReveal>
 					</div>
@@ -130,7 +146,7 @@ export function ApplicationsSection() {
 							className="applications-marquee"
 							style={{ display: "flex", width: "max-content", gap: 14 }}
 						>
-							{MARQUEE_ITEMS.map((item, i) => {
+							{marqueeItems.map((item, i) => {
 								const Icon = item.icon;
 								return (
 									<div

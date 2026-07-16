@@ -3,16 +3,92 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { TabSwitcher } from "./_TabSwitcher";
-import { NavbarDark } from "@/components/ui/NavbarDark";
+import { type Locale } from "@/lib/i18n";
 
 /* ─── Metadata ─────────────────────────────────────────────────── */
-export const metadata: Metadata = {
-	title: "New BMS Software — Medical Support",
-	description:
-		"Il software diagnostico per la posturologia clinica. Analisi 3D, cloud, multilingue.",
-};
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+	const { locale } = await params;
+	const copy = SOFTWARE_COPY[locale] ?? SOFTWARE_COPY.it;
+	return {
+		title: `${copy.meta.title} — Medical Support`,
+		description: copy.meta.description,
+	};
+}
 
 /* ─── Shared ────────────────────────────────────────────────────── */
+const SOFTWARE_COPY = {
+	it: {
+		meta: {
+			title: "New BMS Software",
+			description: "Il software diagnostico per la posturologia clinica. Analisi 3D, cloud, multilingue.",
+		},
+		hero: {
+			badge: "Software Diagnostico",
+			title: "Il software che trasforma i dati in diagnosi",
+			subtitle: "New BMS integra analisi 3D, gestione cloud e strumenti di biofeedback in un'unica piattaforma progettata per i professionisti della posturologia clinica.",
+		},
+		analysisSection: {
+			label: "Analisi Disponibili",
+			title: "10 analisi in un unico software",
+			items: [
+				"Baropodometria Statica",
+				"Baropodometria Dinamica",
+				"Stabilometria",
+				"Analisi del Passo",
+				"Posturografia 3D",
+				"Scanner Plantare",
+				"Gait Analysis",
+				"Biofeedback Posturale",
+				"Analisi della Colonna",
+				"Valutazione Ortesica",
+			],
+		},
+		cta: {
+			title: "Pronto a portare la diagnostica nel futuro?",
+			body: "Richiedi una dimostrazione personalizzata o contattaci per scoprire come New BMS può trasformare il tuo studio.",
+			primary: "Richiedi una Demo",
+			secondary: "Contattaci",
+		},
+	},
+	en: {
+		meta: {
+			title: "New BMS Software",
+			description: "Diagnostic software for clinical posturology. 3D analysis, cloud, and multilingual workflows.",
+		},
+		hero: {
+			badge: "Diagnostic Software",
+			title: "The software that turns data into diagnosis",
+			subtitle: "New BMS combines 3D analysis, cloud management, and biofeedback tools in a single platform designed for clinical posturology professionals.",
+		},
+		analysisSection: {
+			label: "Available Analyses",
+			title: "10 analyses in one software platform",
+			items: [
+				"Static Baropodometry",
+				"Dynamic Baropodometry",
+				"Stabilometry",
+				"Gait Analysis",
+				"3D Posturography",
+				"Plantar Scan",
+				"Postural Biofeedback",
+				"Spinal Analysis",
+				"Orthotic Assessment",
+				"Clinical Evaluation",
+			],
+		},
+		cta: {
+			title: "Ready to bring diagnostics into the future?",
+			body: "Request a personalized demo or contact us to discover how New BMS can transform your practice.",
+			primary: "Request a Demo",
+			secondary: "Contact us",
+		},
+	},
+} as const;
+
 const sectionPad: React.CSSProperties = {
 	paddingInline: "clamp(24px,5vw,80px)",
 };
@@ -20,7 +96,8 @@ const sectionPad: React.CSSProperties = {
 /* ════════════════════════════════════════════════════════════════ */
 /*  1. HERO                                                         */
 /* ════════════════════════════════════════════════════════════════ */
-function SoftwareHero() {
+function SoftwareHero({ locale }: { locale: Locale }) {
+	const copy = SOFTWARE_COPY[locale] ?? SOFTWARE_COPY.it;
 	return (
 		<section
 			style={{
@@ -62,13 +139,13 @@ function SoftwareHero() {
 							letterSpacing: "0.1em",
 						}}
 					>
-						Software Diagnostico
+						{copy.hero.badge}
 					</span>
 				</ScrollReveal>
 
 				{/* H1 */}
 				<SplitText
-					text="Il software che trasforma i dati in diagnosi"
+					text={copy.hero.title}
 					tag="h1"
 					stagger={0.03}
 					delay={0.15}
@@ -80,7 +157,7 @@ function SoftwareHero() {
 						color: "white",
 						maxWidth: 700,
 					}}
-					accentWords={["diagnosi", "software"]}
+					accentWords={locale === "en" ? ["software", "diagnosis"] : ["diagnosi", "software"]}
 					accentColor="var(--accent)"
 				/>
 
@@ -95,9 +172,7 @@ function SoftwareHero() {
 							lineHeight: 1.65,
 						}}
 					>
-						New BMS integra analisi 3D, gestione cloud e strumenti di
-						biofeedback in un&apos;unica piattaforma progettata per i
-						professionisti della posturologia clinica.
+						{copy.hero.subtitle}
 					</p>
 				</ScrollReveal>
 			</div>
@@ -108,20 +183,8 @@ function SoftwareHero() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  3. ANALYSIS LIST                                                */
 /* ════════════════════════════════════════════════════════════════ */
-const ANALYSES = [
-	"Baropodometria Statica",
-	"Baropodometria Dinamica",
-	"Stabilometria",
-	"Analisi del Passo",
-	"Posturografia 3D",
-	"Scanner Plantare",
-	"Gait Analysis",
-	"Biofeedback Posturale",
-	"Analisi della Colonna",
-	"Valutazione Ortesica",
-];
-
-function AnalysisList() {
+function AnalysisList({ locale }: { locale: Locale }) {
+	const copy = SOFTWARE_COPY[locale] ?? SOFTWARE_COPY.it;
 	return (
 		<>
 			<style>{`
@@ -149,13 +212,13 @@ function AnalysisList() {
 							letterSpacing: "0.1em",
 						}}
 					>
-						Analisi Disponibili
+						{copy.analysisSection.label}
 					</span>
 				</ScrollReveal>
 
 				{/* H2 */}
 				<SplitText
-					text="10 analisi in un unico software"
+					text={copy.analysisSection.title}
 					tag="h2"
 					stagger={0.03}
 					delay={0.1}
@@ -177,7 +240,7 @@ function AnalysisList() {
 						marginTop: "clamp(40px,5vw,64px)",
 					}}
 				>
-					{ANALYSES.map((label, i) => (
+					{copy.analysisSection.items.map((label, i) => (
 						<ScrollReveal key={label} variant="fadeUp" delay={0.05 + i * 0.07}>
 							<div
 								style={{
@@ -220,7 +283,8 @@ function AnalysisList() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  4. SOFTWARE CTA                                                 */
 /* ════════════════════════════════════════════════════════════════ */
-function SoftwareCTA() {
+function SoftwareCTA({ locale }: { locale: Locale }) {
+	const copy = SOFTWARE_COPY[locale] ?? SOFTWARE_COPY.it;
 	return (
 		<section
 			style={{
@@ -249,7 +313,7 @@ function SoftwareCTA() {
 			<div style={{ position: "relative", zIndex: 2 }}>
 				<ScrollReveal variant="fadeUp" delay={0.05}>
 					<SplitText
-						text="Pronto a portare la diagnostica nel futuro?"
+						text={copy.cta.title}
 						tag="h2"
 						stagger={0.03}
 						delay={0.1}
@@ -273,8 +337,7 @@ function SoftwareCTA() {
 							lineHeight: 1.65,
 						}}
 					>
-						Richiedi una dimostrazione personalizzata o contattaci per scoprire
-						come New BMS può trasformare il tuo studio.
+						{copy.cta.body}
 					</p>
 				</ScrollReveal>
 
@@ -290,7 +353,7 @@ function SoftwareCTA() {
 					>
 						<MagneticButton
 							as="a"
-							href="/contatti?subject=demo"
+							href={`/${locale}/contatti?subject=demo`}
 							style={{
 								padding: "14px 40px",
 								background: "white",
@@ -300,11 +363,11 @@ function SoftwareCTA() {
 								textDecoration: "none",
 							}}
 						>
-							Richiedi una Demo
+							{copy.cta.primary}
 						</MagneticButton>
 						<MagneticButton
 							as="a"
-							href="/contatti"
+							href={`/${locale}/contatti`}
 							style={{
 								padding: "14px 40px",
 								border: "1px solid rgba(255,255,255,0.5)",
@@ -315,7 +378,7 @@ function SoftwareCTA() {
 								background: "transparent",
 							}}
 						>
-							Contattaci
+							{copy.cta.secondary}
 						</MagneticButton>
 					</div>
 				</ScrollReveal>
@@ -327,14 +390,18 @@ function SoftwareCTA() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  PAGE                                                            */
 /* ════════════════════════════════════════════════════════════════ */
-export default function SoftwarePage() {
+export default async function SoftwarePage({
+	params,
+}: {
+	params: Promise<{ locale: Locale }>;
+}) {
+	const { locale } = await params;
 	return (
 		<>
-			<NavbarDark />
-			<SoftwareHero />
-			<TabSwitcher />
-			<AnalysisList />
-			<SoftwareCTA />
+			<SoftwareHero locale={locale} />
+			<TabSwitcher locale={locale} />
+			<AnalysisList locale={locale} />
+			<SoftwareCTA locale={locale} />
 		</>
 	);
 }

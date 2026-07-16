@@ -2,7 +2,7 @@ import Link from "next/link";
 import { NEWS_DATA } from "@/lib/news";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
-import { NavbarDark } from "@/components/ui/NavbarDark";
+import { localize, type Locale } from "@/lib/i18n";
 
 /* ─── Shared ────────────────────────────────────────────────────── */
 const sectionPad: React.CSSProperties = {
@@ -12,7 +12,7 @@ const sectionPad: React.CSSProperties = {
 /* ════════════════════════════════════════════════════════════════ */
 /*  1. HERO                                                         */
 /* ════════════════════════════════════════════════════════════════ */
-function NewsHero() {
+function NewsHero({}: { locale: Locale }) {
 	return (
 		<section
 			style={{
@@ -72,7 +72,7 @@ function NewsHero() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  2. NEWS GRID                                                    */
 /* ════════════════════════════════════════════════════════════════ */
-function NewsGrid() {
+function NewsGrid({ locale }: { locale: Locale }) {
 	const items = Object.values(NEWS_DATA).sort((a, b) => (a.date < b.date ? 1 : -1));
 
 	return (
@@ -86,13 +86,13 @@ function NewsGrid() {
 			<div style={{ maxWidth: 1400, marginInline: "auto", width: "100%" }}>
 				<div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 24 }}>
 					{items.map((item) => (
-						<Link key={item.id} href={`/news/${item.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
+						<Link key={item.id} href={`/${locale}/news/${item.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
 							<article style={{ background: "var(--surface)", overflow: "hidden", border: "1px solid var(--border)", display: "flex", flexDirection: "column" }}>
 								<div style={{ aspectRatio: "16 / 10", background: "var(--surface-2)", backgroundImage: item.image ? `url(${item.image})` : undefined, backgroundSize: "cover", backgroundPosition: "center", borderBottom: "1px solid var(--border)" }} />
 								<div style={{ padding: 20 }}>
-									<span style={{ display: "inline-block", padding: "5px 12px", background: "var(--secondary)", color: "white", fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{item.category}</span>
-									<h3 style={{ marginTop: 14, marginBottom: 10, fontSize: "var(--text-lg)", fontWeight: 500, lineHeight: 1.2, color: "var(--primary)" }}>{item.title}</h3>
-									<p style={{ margin: 0, fontSize: "var(--text-sm)", lineHeight: 1.6, color: "var(--muted-foreground)" }}>{item.excerpt}</p>
+									<span style={{ display: "inline-block", padding: "5px 12px", background: "var(--secondary)", color: "white", fontSize: "var(--text-xs)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{localize(item.category, locale)}</span>
+									<h3 style={{ marginTop: 14, marginBottom: 10, fontSize: "var(--text-lg)", fontWeight: 500, lineHeight: 1.2, color: "var(--primary)" }}>{localize(item.title, locale)}</h3>
+									<p style={{ margin: 0, fontSize: "var(--text-sm)", lineHeight: 1.6, color: "var(--muted-foreground)" }}>{localize(item.excerpt, locale)}</p>
 									<p style={{ marginTop: 16, marginBottom: 0, fontSize: "var(--text-sm)", fontWeight: 600, color: "var(--accent)" }}>Scopri di più →</p>
 								</div>
 							</article>
@@ -104,12 +104,16 @@ function NewsGrid() {
 	);
 }
 
-export default function NewsPage() {
+export default async function NewsPage({
+	params,
+}: {
+	params?: Promise<{ locale?: Locale }>;
+}) {
+	const { locale = "it" } = (await params) ?? {};
 	return (
 		<>
-			<NavbarDark />
-			<NewsHero />
-			<NewsGrid />
+			<NewsHero locale={locale} />
+			<NewsGrid locale={locale} />
 		</>
 	);
 }

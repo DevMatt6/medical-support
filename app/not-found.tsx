@@ -3,8 +3,10 @@
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { useRouteLocale } from "@/lib/route-locale";
 
 export default function NotFound() {
+	const locale = useRouteLocale();
 	return (
 		<div
 			style={{
@@ -67,7 +69,7 @@ export default function NotFound() {
 				<ScrollReveal variant="fadeUp" delay={0.5}>
 					<MagneticButton
 						as="a"
-						href="/"
+						href={`/${locale}`}
 						style={{
 							padding: "14px 40px",
 							background: "var(--primary)",

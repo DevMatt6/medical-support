@@ -2,14 +2,40 @@ import type { Metadata } from "next";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
 import { ContactForm } from "./_ContactForm";
-import { NavbarDark } from "@/components/ui/NavbarDark";
+import { defaultLocale, type Locale } from "@/lib/i18n";
+import { pageCopy } from "@/lib/page-copy";
 
-/* ─── Metadata ─────────────────────────────────────────────────── */
-export const metadata: Metadata = {
-	title: "Contatti — Medical Support",
-	description:
-		"Contattaci per una dimostrazione personalizzata dei sistemi Medical Support.",
+const CONTATTI_COPY = {
+	it: {
+		hero: {
+			title: "Parlaci del tuo progetto diagnostico.",
+			description:
+				"Siamo a disposizione per rispondere a qualsiasi domanda sui nostri sistemi diagnostici e per organizzare una dimostrazione personalizzata nel tuo studio.",
+		},
+	},
+	en: {
+		hero: {
+			title: "Tell us about your diagnostic project.",
+			description:
+				"We are here to answer any questions about our diagnostic systems and arrange a personalized demonstration at your practice.",
+		},
+	},
+} as const;
+
+type ContattiPageProps = {
+	params?: Promise<{ locale?: Locale }>;
 };
+
+async function resolveLocale(params?: Promise<{ locale?: Locale }>): Promise<Locale> {
+	const resolved = await params;
+	return resolved?.locale ?? defaultLocale;
+}
+
+export async function generateMetadata({ params }: ContattiPageProps): Promise<Metadata> {
+	const locale = await resolveLocale(params);
+	const copy = pageCopy.contatti?.[locale] ?? pageCopy.contatti.it;
+	return { title: copy.title, description: copy.description };
+}
 
 /* ─── Shared ────────────────────────────────────────────────────── */
 const sectionPad: React.CSSProperties = {
@@ -19,7 +45,8 @@ const sectionPad: React.CSSProperties = {
 /* ════════════════════════════════════════════════════════════════ */
 /*  1. HERO                                                         */
 /* ════════════════════════════════════════════════════════════════ */
-function ContattiHero() {
+function ContattiHero({ locale }: { locale: Locale }) {
+	const copy = CONTATTI_COPY[locale] ?? CONTATTI_COPY.it;
 	return (
 		<section
 			style={{
@@ -46,7 +73,7 @@ function ContattiHero() {
 			{/* Content */}
 			<div style={{ position: "relative", zIndex: 2 }}>
 				<SplitText
-					text="Parlaci del tuo progetto diagnostico."
+					text={copy.hero.title}
 					tag="h1"
 					stagger={0.03}
 					delay={0.1}
@@ -71,9 +98,7 @@ function ContattiHero() {
 							lineHeight: 1.65,
 						}}
 					>
-						Siamo a disposizione per rispondere a qualsiasi domanda sui nostri
-						sistemi diagnostici e per organizzare una dimostrazione
-						personalizzata nel tuo studio.
+						{copy.hero.description}
 					</p>
 				</ScrollReveal>
 			</div>
@@ -84,7 +109,7 @@ function ContattiHero() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  2. CONTACT SECTION                                              */
 /* ════════════════════════════════════════════════════════════════ */
-function ContactSection() {
+function ContactSection({ locale }: { locale: Locale }) {
 	return (
 		<section
 			style={{
@@ -93,7 +118,7 @@ function ContactSection() {
 				background: "white",
 			}}
 		>
-			<ContactForm />
+			<ContactForm locale={locale} />
 		</section>
 	);
 }
@@ -130,12 +155,12 @@ function MapPlaceholder() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  PAGE                                                            */
 /* ════════════════════════════════════════════════════════════════ */
-export default function ContattiPage() {
+export default async function ContattiPage({ params }: ContattiPageProps) {
+	const locale = await resolveLocale(params);
 	return (
 		<>
-			<NavbarDark />
-			<ContattiHero />
-			<ContactSection />
+			<ContattiHero locale={locale} />
+			<ContactSection locale={locale} />
 			<MapPlaceholder />
 		</>
 	);

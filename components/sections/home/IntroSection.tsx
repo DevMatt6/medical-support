@@ -3,10 +3,14 @@
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
+import { useRouteLocale } from "@/lib/route-locale";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { homeCopy } from "@/lib/home-copy";
 import { SplitText } from "@/components/ui/SplitText";
 
 export function IntroSection() {
+	const locale = useRouteLocale();
+	const copy = homeCopy.intro[locale];
 	const sectionRef = useRef<HTMLElement>(null);
 	const [underlineHovered, setUnderlineHovered] = useState(false);
 
@@ -49,14 +53,14 @@ export function IntroSection() {
 									padding: "6px 14px",
 								}}
 							>
-								Chi siamo
+								{locale === "it" ? "Chi siamo" : "About us"}
 							</span>
 						</ScrollReveal>
 
 						<div style={{ marginTop: 24 }}>
 							<SplitText
 								tag="h2"
-								text="Tecnologia al servizio della diagnosi clinica"
+								text={copy.headline}
 								stagger={0.03}
 								delay={0.2}
 								style={{
@@ -84,12 +88,7 @@ export function IntroSection() {
 									lineHeight: 1.5,
 								}}
 							>
-								Medical Support nasce dall&apos;incontro tra ingegneria
-								biomedica e clinica posturale. I nostri sistemi acquisiscono
-								dati tridimensionali ad alta risoluzione per supportare il
-								clinico in ogni fase diagnostica: dall&apos;analisi del passo
-								alla mappatura plantare, fino all&apos;elaborazione della
-								colonna vertebrale.
+								{copy.subheadline}
 							</p>
 						</ScrollReveal>
 
@@ -116,7 +115,7 @@ export function IntroSection() {
 						<ScrollReveal variant="fadeUp" delay={0.7}>
 							<div style={{ marginTop: 32 }}>
 								<Link
-									href="/chi-siamo"
+									href={`/${locale}/chi-siamo`}
 									style={{
 										position: "relative",
 										display: "inline-block",
@@ -128,7 +127,7 @@ export function IntroSection() {
 									onMouseEnter={() => setUnderlineHovered(true)}
 									onMouseLeave={() => setUnderlineHovered(false)}
 								>
-									Scopri la nostra storia →
+									{copy.ctaPrimary}
 									<motion.span
 										aria-hidden
 										style={{

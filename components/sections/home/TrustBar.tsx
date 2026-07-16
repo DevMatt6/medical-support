@@ -2,29 +2,8 @@
 
 import { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
-
-interface StatItem {
-	value: string;
-	label: string;
-	numericTarget?: number;
-	numericPrefix?: string;
-	numericSuffix?: string;
-}
-
-const STATS: StatItem[] = [
-	{
-		value: "+20 anni",
-		label: "di esperienza",
-		numericTarget: 20,
-		numericPrefix: "+",
-		numericSuffix: " anni",
-	},
-
-	{ value: "Certificazione CE", label: "Direttiva 93/42/CEE" },
-	{ value: "5 sistemi integrati", label: "Linea Cristal" },
-	{ value: "1 Software", label: "New BMS" },
-	{ value: "15 Analisi", label: "Diagnostica di precisione" },
-];
+import { useRouteLocale } from "@/lib/route-locale";
+import { homeCopy } from "@/lib/home-copy";
 
 function AnimatedNumber({
 	target,
@@ -46,18 +25,28 @@ function AnimatedNumber({
 
 		let startTime: number | null = null;
 		const duration = 1200;
+		let frameId: number | null = null;
 
 		function step(timestamp: number) {
 			if (!startTime) startTime = timestamp;
 			const progress = Math.min((timestamp - startTime) / duration, 1);
 			const eased = 1 - Math.pow(1 - progress, 3);
 			setDisplay(Math.round(eased * target));
-			if (progress < 1) requestAnimationFrame(step);
+			if (progress < 1) {
+				frameId = requestAnimationFrame(step);
+			}
 		}
 
-		// Aspetta che il fadeUp del parent finisca (200ms)
-		const id = setTimeout(() => requestAnimationFrame(step), 200);
-		return () => clearTimeout(id);
+		const timeoutId = window.setTimeout(() => {
+			frameId = requestAnimationFrame(step);
+		}, 200);
+
+		return () => {
+			window.clearTimeout(timeoutId);
+			if (frameId !== null) {
+				cancelAnimationFrame(frameId);
+			}
+		};
 	}, [started, target]);
 
 	return (
@@ -70,16 +59,20 @@ function AnimatedNumber({
 }
 
 export function TrustBar() {
+	const locale = useRouteLocale();
 	const containerRef = useRef<HTMLDivElement>(null);
 	const isInView = useInView(containerRef, { once: true, amount: 0.3 });
-
 	const [isMobile, setIsMobile] = useState(false);
+	const items = homeCopy.trustbar[locale].items;
+
 	useEffect(() => {
 		const mq = window.matchMedia("(max-width: 767px)");
-		setIsMobile(mq.matches);
-		const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-		mq.addEventListener("change", handler);
-		return () => mq.removeEventListener("change", handler);
+		const updateIsMobile = () => setIsMobile(mq.matches);
+
+		updateIsMobile();
+		mq.addEventListener("change", updateIsMobile);
+
+		return () => mq.removeEventListener("change", updateIsMobile);
 	}, []);
 
 	return (
@@ -109,7 +102,7 @@ export function TrustBar() {
 						flexDirection: isMobile ? "column" : "row",
 					}}
 				>
-					{STATS.map((stat, i) => (
+					{items.map((stat, i) => (
 						<div
 							key={stat.value}
 							style={{

@@ -6,12 +6,15 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { NEWS_DATA } from "@/lib/news";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
+import { localize } from "@/lib/i18n";
+import { useRouteLocale } from "@/lib/route-locale";
 
 const sectionPad: React.CSSProperties = {
 	paddingInline: "clamp(24px,5vw,80px)",
 };
 
 export function NewsCarousel() {
+	const locale = useRouteLocale();
 	const items = Object.values(NEWS_DATA).sort((a, b) =>
 		a.date < b.date ? 1 : -1,
 	);
@@ -49,11 +52,11 @@ export function NewsCarousel() {
 									textTransform: "uppercase",
 								}}
 							>
-								Aggiornamenti
+								{locale === "it" ? "Aggiornamenti" : "Updates"}
 							</span>
 						</ScrollReveal>
 						<SplitText
-							text="News & Eventi"
+							text={locale === "it" ? "News & Eventi" : "News & Events"}
 							tag="h2"
 							stagger={0.03}
 							delay={0.12}
@@ -69,7 +72,7 @@ export function NewsCarousel() {
 					</div>
 					<div style={{ display: "flex", gap: 12, flexShrink: 0 }}>
 						<button
-							aria-label="News precedenti"
+							aria-label={locale === "it" ? "News precedenti" : "Previous news"}
 							style={{
 								width: 48,
 								height: 48,
@@ -85,7 +88,7 @@ export function NewsCarousel() {
 							<ChevronLeft size={18} />
 						</button>
 						<button
-							aria-label="News successive"
+							aria-label={locale === "it" ? "News successive" : "Next news"}
 							style={{
 								width: 48,
 								height: 48,
@@ -125,7 +128,7 @@ export function NewsCarousel() {
 						{items.map((item) => (
 							<Link
 								key={item.id}
-								href={`/news/${item.slug}`}
+								href={`/${locale}/news/${item.slug}`}
 								style={{
 									textDecoration: "none",
 									color: "inherit",
@@ -164,7 +167,7 @@ export function NewsCarousel() {
 											alignSelf: "flex-start",
 										}}
 									>
-										{item.category}
+										{localize(item.category)}
 									</span>
 									<h3
 										style={{
@@ -175,7 +178,7 @@ export function NewsCarousel() {
 											lineHeight: 1.2,
 										}}
 									>
-										{item.title}
+										{localize(item.title)}
 									</h3>
 									<p
 										style={{
@@ -186,7 +189,7 @@ export function NewsCarousel() {
 											marginTop: 16,
 										}}
 									>
-										{item.excerpt}
+										{localize(item.excerpt)}
 									</p>
 									<div
 										style={{
@@ -199,7 +202,7 @@ export function NewsCarousel() {
 											color: "var(--primary)",
 										}}
 									>
-										Scopri
+										{locale === "it" ? "Scopri" : "Discover"}
 										<span style={{ display: "inline-flex", transform: "none" }}>
 											→
 										</span>

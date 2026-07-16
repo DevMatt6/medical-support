@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next: dev server",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "if command -v pnpm >/dev/null 2>&1; then pnpm dev; elif [ -x \"$HOME/.local/share/pnpm/pnpm\" ]; then \"$HOME/.local/share/pnpm/pnpm\" dev; else corepack pnpm dev; fi",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

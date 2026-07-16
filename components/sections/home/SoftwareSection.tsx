@@ -3,28 +3,52 @@
 import Image from "next/image";
 import { BarChart3, Cloud, Globe } from "lucide-react";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { homeCopy } from "@/lib/home-copy";
 import { SplitText } from "@/components/ui/SplitText";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { useRouteLocale } from "@/lib/route-locale";
 
-const FEATURES = [
-	{
-		icon: <BarChart3 size={28} strokeWidth={1.5} />,
-		title: "Analisi 3D",
-		body: "Pressione statica, dinamica e stabilometria in un'unica piattaforma.",
-	},
-	{
-		icon: <Cloud size={28} strokeWidth={1.5} />,
-		title: "Cloud Ready",
-		body: "Accesso ai dati via TELEPOSTUROLOGIA da qualsiasi dispositivo.",
-	},
-	{
-		icon: <Globe size={28} strokeWidth={1.5} />,
-		title: "Multilingue",
-		body: "Adottato da migliaia di professionisti in Italia e in tutto il mondo.",
-	},
-];
+const FEATURES = {
+	it: [
+		{
+			icon: <BarChart3 size={28} strokeWidth={1.5} />,
+			title: "Analisi 3D",
+			body: "Pressione statica, dinamica e stabilometria in un'unica piattaforma.",
+		},
+		{
+			icon: <Cloud size={28} strokeWidth={1.5} />,
+			title: "Cloud Ready",
+			body: "Accesso ai dati via TELEPOSTUROLOGIA da qualsiasi dispositivo.",
+		},
+		{
+			icon: <Globe size={28} strokeWidth={1.5} />,
+			title: "Multilingue",
+			body: "Adottato da migliaia di professionisti in Italia e in tutto il mondo.",
+		},
+	],
+	en: [
+		{
+			icon: <BarChart3 size={28} strokeWidth={1.5} />,
+			title: "3D Analysis",
+			body: "Static pressure, dynamic pressure, and stabilometry in a single platform.",
+		},
+		{
+			icon: <Cloud size={28} strokeWidth={1.5} />,
+			title: "Cloud Ready",
+			body: "Access data through TELEPOSTUROLOGY from any device.",
+		},
+		{
+			icon: <Globe size={28} strokeWidth={1.5} />,
+			title: "Multilingual",
+			body: "Adopted by thousands of professionals in Italy and around the world.",
+		},
+	],
+};
 
 export function SoftwareSection() {
+	const locale = useRouteLocale();
+	const copy = homeCopy.software[locale];
+	const features = FEATURES[locale];
 	return (
 		<section
 			style={{
@@ -63,6 +87,7 @@ export function SoftwareSection() {
 				<ScrollReveal variant="fadeUp" delay={0.05}>
 					<div style={{ textAlign: "center" }}>
 						<SplitText
+							text={copy.headline}
 							tag="h2"
 							stagger={0.03}
 							delay={0.1}
@@ -72,9 +97,7 @@ export function SoftwareSection() {
 								color: "var(--primary)",
 								margin: 0,
 							}}
-						>
-							Il software che dà voce ai dati
-						</SplitText>
+						/>
 					</div>
 				</ScrollReveal>
 
@@ -90,9 +113,7 @@ export function SoftwareSection() {
 							lineHeight: 1.5,
 						}}
 					>
-						Una piattaforma diagnostica completa per raccogliere, analizzare e
-						condividere i dati posturali dei tuoi pazienti in modo semplice e
-						preciso.
+						{copy.subheadline}
 					</p>
 				</ScrollReveal>
 			</div>
@@ -121,7 +142,7 @@ export function SoftwareSection() {
 						>
 							<Image
 								src="/images/products/newbms.png"
-								alt="New BMS Software"
+								alt={locale === "it" ? "Software New BMS" : "New BMS software"}
 								fill
 								style={{ objectFit: "cover", objectPosition: "center" }}
 							/>
@@ -130,7 +151,7 @@ export function SoftwareSection() {
 
 					{/* Right — 3 feature in colonna */}
 					<div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-						{FEATURES.map((feature, i) => (
+						{features.map((feature, i) => (
 							<div key={feature.title}>
 								<ScrollReveal variant="fadeUp" delay={0.1 + i * 0.12}>
 									<div
@@ -163,7 +184,9 @@ export function SoftwareSection() {
 												lineHeight: 1.6,
 											}}
 										>
-											{feature.body}
+											{locale === "it"
+												? "Adottato da migliaia di professionisti in Italia e in tutto il mondo."
+												: "Adopted by thousands of professionals in Italy and around the world."}
 										</p>
 									</div>
 								</ScrollReveal>
@@ -179,7 +202,7 @@ export function SoftwareSection() {
 					>
 						<MagneticButton
 							as="a"
-							href="/software"
+							href={`/${locale}/software`}
 							style={{
 								padding: "14px 40px",
 								background: "var(--primary)",
@@ -189,7 +212,7 @@ export function SoftwareSection() {
 								textDecoration: "none",
 							}}
 						>
-							Scopri New BMS
+							{copy.ctaPrimary}
 						</MagneticButton>
 					</div>
 				</ScrollReveal>

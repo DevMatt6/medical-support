@@ -1,18 +1,47 @@
 "use client";
 
 import Image from "next/image";
-
-import Link from "next/link";
+import { useRouteLocale } from "@/lib/route-locale";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
 
-const STATS = [
-	{ value: "20+", label: "anni di R&D" },
-	{ value: "5.000+", label: "professionisti" },
-	{ value: "CE", label: "MDR 2017/745" },
-];
+const CLINICAL_COPY = {
+	it: {
+		eyebrow: "Ricerca & Sviluppo",
+		title: "Vent'anni di ricerca clinica",
+		paragraph1:
+			"Da oltre vent'anni collaboriamo con università, ospedali e centri di ricerca per validare ogni algoritmo diagnostico su casistiche reali. I nostri protocolli sono pubblicati su riviste scientifiche internazionali.",
+		paragraph2:
+			"La certificazione CE MDR 2017/745 non è un traguardo ma un punto di partenza: ogni aggiornamento software passa per un ciclo di validazione clinica prima del rilascio.",
+	},
+	en: {
+		eyebrow: "Research & Development",
+		title: "Twenty years of clinical research",
+		paragraph1:
+			"For more than twenty years, we have worked with universities, hospitals, and research centers to validate every diagnostic algorithm on real-world cases. Our protocols are published in international scientific journals.",
+		paragraph2:
+			"CE MDR 2017/745 certification is not a finish line but a starting point: every software update goes through a clinical validation cycle before release.",
+	},
+} as const;
+
+const STATS = {
+	it: [
+		{ value: "20+", label: "anni di R&D" },
+		{ value: "5.000+", label: "professionisti" },
+		{ value: "CE", label: "MDR 2017/745" },
+	],
+	en: [
+		{ value: "20+", label: "years of R&D" },
+		{ value: "5,000+", label: "professionals" },
+		{ value: "CE", label: "MDR 2017/745" },
+	],
+} as const;
 
 export function ClinicalSection() {
+	const locale = useRouteLocale();
+	const copy = CLINICAL_COPY[locale];
+	const stats = STATS[locale];
+
 	return (
 		<>
 			<style>{`
@@ -36,7 +65,6 @@ export function ClinicalSection() {
 							gap: "clamp(48px,6vw,80px)",
 						}}
 					>
-						{/* COLONNA DESTRA — testo */}
 						<div
 							style={{
 								display: "flex",
@@ -44,7 +72,6 @@ export function ClinicalSection() {
 								justifyContent: "center",
 							}}
 						>
-							{/* 1. Eyebrow */}
 							<ScrollReveal variant="fadeIn" delay={0.05}>
 								<p
 									style={{
@@ -58,13 +85,12 @@ export function ClinicalSection() {
 										padding: "6px 14px",
 									}}
 								>
-									Ricerca &amp; Sviluppo
+									{copy.eyebrow}
 								</p>
 							</ScrollReveal>
 
-							{/* 2. H2 con SplitText */}
 							<SplitText
-								text="Vent'anni di ricerca clinica"
+								text={copy.title}
 								tag="h2"
 								stagger={0.03}
 								delay={0.2}
@@ -77,7 +103,6 @@ export function ClinicalSection() {
 								}}
 							/>
 
-							{/* 3. Paragrafo 1 */}
 							<ScrollReveal variant="fadeUp" delay={0.4}>
 								<p
 									style={{
@@ -88,14 +113,10 @@ export function ClinicalSection() {
 										lineHeight: 1.5,
 									}}
 								>
-									Da oltre vent&apos;anni collaboriamo con università, ospedali
-									e centri di ricerca per validare ogni algoritmo diagnostico su
-									casistiche reali. I nostri protocolli sono pubblicati su
-									riviste scientifiche internazionali.
+									{copy.paragraph1}
 								</p>
 							</ScrollReveal>
 
-							{/* 3. Paragrafo 2 */}
 							<ScrollReveal variant="fadeUp" delay={0.55}>
 								<p
 									style={{
@@ -106,13 +127,10 @@ export function ClinicalSection() {
 										lineHeight: 1.5,
 									}}
 								>
-									La certificazione CE MDR 2017/745 non è un traguardo ma un
-									punto di partenza: ogni aggiornamento software passa per un
-									ciclo di validazione clinica prima del rilascio.
+									{copy.paragraph2}
 								</p>
 							</ScrollReveal>
 
-							{/* 4. Stat Row */}
 							<ScrollReveal variant="fadeUp" delay={0.7}>
 								<div
 									style={{
@@ -122,7 +140,7 @@ export function ClinicalSection() {
 										marginTop: 60,
 									}}
 								>
-									{STATS.map((stat) => (
+									{stats.map((stat) => (
 										<div
 											key={stat.value}
 											style={{
@@ -157,38 +175,28 @@ export function ClinicalSection() {
 									))}
 								</div>
 							</ScrollReveal>
-
-							{/* 5. Link CTA */}
-							<ScrollReveal variant="fadeUp" delay={0.85}>
-								<Link
-									href="/casi-clinici"
-									style={{
-										display: "inline-block",
-										marginTop: 60,
-										color: "var(--primary)",
-										fontSize: "var(--text-sm)",
-										fontWeight: 600,
-										textDecoration: "none",
-									}}
-								>
-									Casi Clinici &amp; Ricerca →
-								</Link>
-							</ScrollReveal>
 						</div>
 
-						{/* COLONNA SINISTRA — immagine */}
-						<ScrollReveal variant="fadeIn" delay={0.1}>
-							<div style={{ position: "relative", aspectRatio: "4/3" }}>
-								<Image
-									src="/images/products/esame-postura-cammino.jpg"
-									alt="Ricerca clinica Medical Support"
-									fill
-									style={{ objectFit: "cover", objectPosition: "center" }}
-								/>
-							</div>
-						</ScrollReveal>
+						<div
+							style={{
+								position: "relative",
+								minHeight: "clamp(420px,52vw,720px)",
+								borderRadius: 0,
+								overflow: "hidden",
+								backgroundColor: "var(--muted)",
+							}}
+						>
+							<Image
+								src="/images/ricerca.png"
+								alt={locale === "it" ? "Ricerca clinica Cristal presso un centro specialistico" : "Cristal clinical research in a specialist center"}
+								fill
+								sizes="(min-width: 1024px) 55vw, 100vw"
+								style={{ objectFit: "cover" }}
+								priority={false}
+							/>
+						</div>
 					</div>
-				</div>{" "}
+				</div>
 			</section>
 		</>
 	);

@@ -2,14 +2,90 @@ import type { Metadata } from "next";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { NavbarDark } from "@/components/ui/NavbarDark";
+import { getDictionary, localize, type Locale } from "@/lib/i18n";
+
+const ABOUT_COPY = {
+	it: {
+		h1: "Innovazione al servizio della posturologia clinica",
+		subtitle:
+			"Da oltre vent'anni progettiamo e produciamo dispositivi medici per la diagnostica posturale, con un impegno costante verso la validazione clinica e la ricerca scientifica.",
+		values: [
+			{
+				num: "01",
+				title: "Innovazione",
+				body: "Da 20 anni sviluppiamo tecnologie diagnostiche d'avanguardia per i professionisti della salute.",
+			},
+			{
+				num: "02",
+				title: "Qualità",
+				body: "Ogni dispositivo è certificato CE MDR 2017/745 e validato clinicamente prima del rilascio.",
+			},
+			{
+				num: "03",
+				title: "Accessibilità",
+				body: "Rendiamo la diagnostica avanzata accessibile a ogni studio medico, indipendentemente dalla dimensione.",
+			},
+		],
+		technologies: [
+			{ title: "IoT Medicale", body: "Dispositivi interconnessi per la raccolta dati in tempo reale." },
+			{ title: "Intelligenza Artificiale", body: "Algoritmi di supporto decisionale clinico basati su machine learning." },
+			{ title: "Scansione 3D", body: "Acquisizione morfologica ad alta precisione con luce strutturata." },
+			{ title: "Sensori Oro-Platino", body: "Celle di carico di alta qualità per la massima accuratezza pressoria." },
+			{ title: "IBP Index", body: "Indice brevettato per la valutazione del bilanciamento posturale." },
+			{ title: "Cloud TELEPOSTUROLOGIA", body: "Piattaforma cloud per la gestione e la condivisione remota dei dati." },
+		],
+		techSectionLabel: "Tecnologie",
+		techSectionTitle: "Il motore della nostra diagnostica",
+		contact: {
+			label: "Dove siamo",
+			title: "Vieni a trovarci",
+			button: "Contattaci",
+			addressLines: ["Via Ippolito Nievo, 61", "00153 Roma (RM)"],
+		},
+	},
+	en: {
+		h1: "Innovation for clinical posturology",
+		subtitle:
+			"For more than twenty years, we have designed and manufactured medical devices for postural diagnostics, with a constant commitment to clinical validation and scientific research.",
+		values: [
+			{ num: "01", title: "Innovation", body: "For 20 years we have developed cutting-edge diagnostic technologies for healthcare professionals." },
+			{ num: "02", title: "Quality", body: "Every device is CE MDR 2017/745 certified and clinically validated before release." },
+			{ num: "03", title: "Accessibility", body: "We make advanced diagnostics accessible to every medical practice, regardless of size." },
+		],
+		techSectionLabel: "Technologies",
+		techSectionTitle: "The engine behind our diagnostics",
+		technologies: [
+			{ title: "Medical IoT", body: "Connected devices for real-time data collection." },
+			{ title: "Artificial Intelligence", body: "Clinical decision-support algorithms powered by machine learning." },
+			{ title: "3D Scanning", body: "High-precision morphological acquisition with structured light." },
+			{ title: "Gold-Platinum Sensors", body: "High-quality load cells for maximum pressure accuracy." },
+			{ title: "IBP Index", body: "Patented index for postural balance assessment." },
+			{ title: "Cloud TELEPOSTUROLOGIA", body: "Cloud platform for remote data management and sharing." },
+		],
+		contact: {
+			label: "Where we are",
+			title: "Visit us",
+			button: "Contact us",
+			addressLines: ["Via Ippolito Nievo, 61", "00153 Rome, Italy"],
+		},
+	},
+} as const;
 
 /* ─── Metadata ─────────────────────────────────────────────────── */
-export const metadata: Metadata = {
-	title: "Chi Siamo — Medical Support",
-	description:
-		"Innovazione italiana al servizio della posturologia clinica da oltre 20 anni.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const { locale } = await params;
+	await getDictionary(locale);
+	return {
+		title: `${localize({ it: "Chi Siamo", en: "About Us" }, locale)} — Medical Support`,
+		description: localize(
+			{
+				it: "Innovazione italiana al servizio della posturologia clinica da oltre 20 anni.",
+				en: "Italian innovation serving clinical posturology for over 20 years.",
+			},
+			locale,
+		),
+	};
+}
 
 /* ─── Shared ────────────────────────────────────────────────────── */
 const sectionPad: React.CSSProperties = {
@@ -19,7 +95,8 @@ const sectionPad: React.CSSProperties = {
 /* ════════════════════════════════════════════════════════════════ */
 /*  1. HERO                                                         */
 /* ════════════════════════════════════════════════════════════════ */
-function HeroAbout() {
+function HeroAbout({ locale }: { locale: Locale }) {
+	const copy = ABOUT_COPY[locale] ?? ABOUT_COPY.it;
 	return (
 		<section
 			style={{
@@ -29,7 +106,7 @@ function HeroAbout() {
 			}}
 		>
 			<SplitText
-				text="Innovazione al servizio della posturologia clinica"
+				text={copy.h1}
 				tag="h1"
 				stagger={0.03}
 				delay={0.1}
@@ -55,9 +132,7 @@ function HeroAbout() {
 						lineHeight: 1.65,
 					}}
 				>
-					Da oltre vent&apos;anni progettiamo e produciamo dispositivi medici
-					per la diagnostica posturale, con un impegno costante verso la
-					validazione clinica e la ricerca scientifica.
+					{copy.subtitle}
 				</p>
 			</ScrollReveal>
 		</section>
@@ -67,25 +142,8 @@ function HeroAbout() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  2. MISSION & VALUES                                             */
 /* ════════════════════════════════════════════════════════════════ */
-const VALUES = [
-	{
-		num: "01",
-		title: "Innovazione",
-		body: "Da 20 anni sviluppiamo tecnologie diagnostiche d'avanguardia per i professionisti della salute.",
-	},
-	{
-		num: "02",
-		title: "Qualità",
-		body: "Ogni dispositivo è certificato CE MDR 2017/745 e validato clinicamente prima del rilascio.",
-	},
-	{
-		num: "03",
-		title: "Accessibilità",
-		body: "Rendiamo la diagnostica avanzata accessibile a ogni studio medico, indipendentemente dalla dimensione.",
-	},
-];
-
-function MissionValues() {
+function MissionValues({ locale }: { locale: Locale }) {
+	const copy = ABOUT_COPY[locale] ?? ABOUT_COPY.it;
 	return (
 		<>
 			<style>{`
@@ -108,7 +166,7 @@ function MissionValues() {
 						gap: 10,
 					}}
 				>
-					{VALUES.map((v, i) => (
+					{copy.values.map((v, i) => (
 						<ScrollReveal key={v.num} variant="fadeUp" delay={0.1 + i * 0.12}>
 							<div
 								style={{
@@ -171,34 +229,8 @@ function MissionValues() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  3. TECHNOLOGIES                                                 */
 /* ════════════════════════════════════════════════════════════════ */
-const TECHNOLOGIES = [
-	{
-		title: "IoT Medicale",
-		body: "Dispositivi interconnessi per la raccolta dati in tempo reale.",
-	},
-	{
-		title: "Intelligenza Artificiale",
-		body: "Algoritmi di supporto decisionale clinico basati su machine learning.",
-	},
-	{
-		title: "Scansione 3D",
-		body: "Acquisizione morfologica ad alta precisione con luce strutturata.",
-	},
-	{
-		title: "Sensori Oro-Platino",
-		body: "Celle di carico di alta qualità per la massima accuratezza pressoria.",
-	},
-	{
-		title: "IBP Index",
-		body: "Indice brevettato per la valutazione del bilanciamento posturale.",
-	},
-	{
-		title: "Cloud TELEPOSTUROLOGIA",
-		body: "Piattaforma cloud per la gestione e la condivisione remota dei dati.",
-	},
-];
-
-function Technologies() {
+function Technologies({ locale }: { locale: Locale }) {
+	const copy = ABOUT_COPY[locale] ?? ABOUT_COPY.it;
 	return (
 		<>
 			<style>{`
@@ -230,13 +262,13 @@ function Technologies() {
 							padding: "6px 14px",
 						}}
 					>
-						Tecnologie
+						{copy.techSectionLabel}
 					</p>
 				</ScrollReveal>
 
 				{/* H2 */}
 				<SplitText
-					text="Il motore della nostra diagnostica"
+					text={copy.techSectionTitle}
 					tag="h2"
 					stagger={0.03}
 					delay={0.1}
@@ -258,7 +290,7 @@ function Technologies() {
 						marginTop: "clamp(40px,5vw,64px)",
 					}}
 				>
-					{TECHNOLOGIES.map((tech, i) => (
+					{copy.technologies.map((tech, i) => (
 						<ScrollReveal
 							key={tech.title}
 							variant="fadeUp"
@@ -303,7 +335,9 @@ function Technologies() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  4. MAP + CONTACT                                                */
 /* ════════════════════════════════════════════════════════════════ */
-function MapContact() {
+function MapContact({ locale }: { locale: Locale }) {
+	const copy = ABOUT_COPY[locale] ?? ABOUT_COPY.it;
+	const { contact } = copy;
 	return (
 		<>
 			<style>{`
@@ -339,12 +373,12 @@ function MapContact() {
 									color: "var(--muted-foreground)",
 								}}
 							>
-								Dove siamo
+								{contact.label}
 							</p>
 						</ScrollReveal>
 
 						<SplitText
-							text="Vieni a trovarci"
+							text={contact.title}
 							tag="h2"
 							stagger={0.04}
 							delay={0.1}
@@ -373,9 +407,12 @@ function MapContact() {
 										lineHeight: 1.6,
 									}}
 								>
-									Via Ippolito Nievo, 61
-									<br />
-									00153 Roma (RM)
+									{contact.addressLines.map((line) => (
+										<span key={line}>
+											{line}
+											<br />
+										</span>
+									))}
 								</p>
 								<a
 									href="tel:+393475183978"
@@ -406,7 +443,7 @@ function MapContact() {
 							<div style={{ marginTop: 32 }}>
 								<MagneticButton
 									as="a"
-									href="/contatti"
+									href={`/${locale}/contatti`}
 									style={{
 										padding: "14px 40px",
 										background: "var(--primary)",
@@ -416,7 +453,7 @@ function MapContact() {
 										textDecoration: "none",
 									}}
 								>
-									Contattaci
+									{contact.button}
 								</MagneticButton>
 							</div>
 						</ScrollReveal>
@@ -455,14 +492,18 @@ function MapContact() {
 /* ════════════════════════════════════════════════════════════════ */
 /*  PAGE                                                            */
 /* ════════════════════════════════════════════════════════════════ */
-export default function ChiSiamoPage() {
+export default async function ChiSiamoPage({
+	params,
+}: {
+	params: Promise<{ locale: Locale }>;
+}) {
+	const { locale } = await params;
 	return (
 		<>
-			<NavbarDark />
-			<HeroAbout />
-			<MissionValues />
-			<Technologies />
-			<MapContact />
+			<HeroAbout locale={locale} />
+			<MissionValues locale={locale} />
+			<Technologies locale={locale} />
+			<MapContact locale={locale} />
 		</>
 	);
 }

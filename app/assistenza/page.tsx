@@ -2,23 +2,53 @@ import type { Metadata } from "next";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
 import { SupportForm } from "./_SupportForm";
-import { NavbarDark } from "@/components/ui/NavbarDark";
+import { type Locale } from "@/lib/i18n";
 
 /* ─── Metadata ─────────────────────────────────────────────────── */
-export const metadata: Metadata = {
-	title: "Assistenza tecnica — Medical Support",
-	description: "Richiedi supporto tecnico per i sistemi Medical Support.",
-};
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ locale: Locale }>;
+}): Promise<Metadata> {
+	const { locale } = await params;
+	const copy = ASSISTENZA_COPY[locale] ?? ASSISTENZA_COPY.it;
+	return {
+		title: `${copy.meta.title} — Medical Support`,
+		description: copy.meta.description,
+	};
+}
 
-/* ─── Shared ────────────────────────────────────────────────────── */
+const ASSISTENZA_COPY = {
+	it: {
+		meta: {
+			title: "Assistenza tecnica",
+			description: "Richiedi supporto tecnico per i sistemi Medical Support.",
+		},
+		hero: {
+			title: "Richiedi assistenza tecnica per la tua strumentazione.",
+			description:
+				"Compila il modulo per segnalare anomalie, malfunzionamenti o richieste di supporto operativo. Il nostro reparto tecnico ti ricontatterà per pianificare l’intervento.",
+		},
+	},
+	en: {
+		meta: {
+			title: "Technical support",
+			description: "Request technical support for Medical Support systems.",
+		},
+		hero: {
+			title: "Request technical support for your equipment.",
+			description:
+				"Fill out the form to report issues, malfunctions, or operational support requests. Our technical team will contact you to schedule the intervention.",
+		},
+	},
+} as const;
+
 const sectionPad: React.CSSProperties = {
 	paddingInline: "clamp(24px,5vw,80px)",
 };
 
-/* ════════════════════════════════════════════════════════════════ */
-/*  1. HERO                                                         */
-/* ════════════════════════════════════════════════════════════════ */
-function AssistenzaHero() {
+function AssistenzaHero({ locale }: { locale: Locale }) {
+	const copy = ASSISTENZA_COPY[locale] ?? ASSISTENZA_COPY.it;
 	return (
 		<section
 			style={{
@@ -28,7 +58,6 @@ function AssistenzaHero() {
 				position: "relative",
 			}}
 		>
-			{/* Gradient overlay */}
 			<div
 				style={{
 					position: "absolute",
@@ -36,16 +65,14 @@ function AssistenzaHero() {
 					left: 0,
 					right: 0,
 					height: "60%",
-					background:
-						"linear-gradient(to top, var(--accent) 0%, transparent 100%)",
+					background: "linear-gradient(to top, var(--accent) 0%, transparent 100%)",
 					zIndex: 1,
 					pointerEvents: "none",
 				}}
 			/>
-			{/* Content */}
 			<div style={{ position: "relative", zIndex: 2 }}>
 				<SplitText
-					text="Richiedi assistenza tecnica per la tua strumentazione."
+					text={copy.hero.title}
 					tag="h1"
 					stagger={0.03}
 					delay={0.1}
@@ -57,7 +84,7 @@ function AssistenzaHero() {
 						margin: 0,
 						maxWidth: 850,
 					}}
-					accentWords={["assistenza", "tecnica"]}
+					accentWords={locale === "en" ? ["technical", "support"] : ["assistenza", "tecnica"]}
 					accentColor="var(--accent)"
 				/>
 				<ScrollReveal variant="fadeUp" delay={0.4}>
@@ -70,9 +97,7 @@ function AssistenzaHero() {
 							lineHeight: 1.65,
 						}}
 					>
-						Compila il modulo per segnalare anomalie, malfunzionamenti o
-						richieste di supporto operativo. Il nostro reparto tecnico ti
-						ricontatterà per pianificare l&apos;intervento.
+						{copy.hero.description}
 					</p>
 				</ScrollReveal>
 			</div>
@@ -80,10 +105,7 @@ function AssistenzaHero() {
 	);
 }
 
-/* ════════════════════════════════════════════════════════════════ */
-/*  2. SUPPORT SECTION                                              */
-/* ════════════════════════════════════════════════════════════════ */
-function SupportSection() {
+function SupportSection({ locale }: { locale: Locale }) {
 	return (
 		<section
 			style={{
@@ -92,20 +114,21 @@ function SupportSection() {
 				background: "white",
 			}}
 		>
-			<SupportForm />
+			<SupportForm locale={locale} />
 		</section>
 	);
 }
 
-/* ════════════════════════════════════════════════════════════════ */
-/*  PAGE                                                            */
-/* ════════════════════════════════════════════════════════════════ */
-export default function AssistenzaPage() {
+export default async function AssistenzaPage({
+	params,
+}: {
+	params: Promise<{ locale: Locale }>;
+}) {
+	const { locale } = await params;
 	return (
 		<>
-			<NavbarDark />
-			<AssistenzaHero />
-			<SupportSection />
+			<AssistenzaHero locale={locale} />
+			<SupportSection locale={locale} />
 		</>
 	);
 }

@@ -3,8 +3,114 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SplitText } from "@/components/ui/SplitText";
+import { type Locale } from "@/lib/i18n";
 
 const ASSISTENZA_EMAIL = "commerciale@medical-support.org";
+
+const FORM_COPY = {
+	it: {
+		title: "Modulo di assistenza tecnica",
+		success: "✓ Richiesta inviata. Il reparto tecnico ti contatterà al più presto.",
+		headline: "Nuova richiesta dal modulo assistenza tecnica",
+		dateRequest: "Data richiesta",
+		clientCode: "Codice cliente",
+		client: "Cliente / Ragione sociale",
+		contactPerson: "Referente",
+		phone: "Recapito telefonico",
+		email: "Email",
+		contactTimes: "Orari di contatto",
+		system: "Sistema",
+		typeModel: "Tipologia / Modello",
+		softwareLabel: "Software",
+		computerBrand: "Marca computer",
+		windowsVersion: "Versione Windows",
+		cameraCount: "Numero telecamere",
+		problemDescription: "Descrizione problematica",
+		selectSystem: "Seleziona sistema",
+		annualContract: "Possiedo un contratto annuale di assistenza tecnica",
+		authorizeSupremo: "Autorizzo il collegamento remoto tramite Supremo",
+		eol: "Confermo di aver preso visione della dichiarazione EOL",
+		textPlaceholder: "Inserisci qui",
+		textareaPlaceholder: "Descrivi il problema riscontrato",
+		yes: "Sì",
+		no: "No",
+		submit: "Invia richiesta",
+		tagline: "Supporto rapido, gestione precisa.",
+		help: "Compila il modulo con tutti i dettagli tecnici disponibili. La richiesta verrà inoltrata al reparto commerciale e assistenza per la presa in carico.",
+		error: "Errore nell'invio della richiesta. Riprova.",
+		narrative: {
+			requestDate: "Data richiesta",
+			clientCode: "Codice cliente",
+			client: "Cliente / Ragione sociale",
+			contactPerson: "Referente",
+			phone: "Telefono",
+			email: "Email",
+			contactTimes: "Orari di contatto",
+			system: "Sistema",
+			typeModel: "Tipologia / Modello",
+			software: "Software",
+			computerBrand: "Marca computer",
+			windowsVersion: "Versione Windows",
+			cameraCount: "Numero telecamere",
+			contract: "Contratto assistenza",
+			authorizeSupremo: "Autorizza Supremo",
+			eol: "Dichiarazione EOL",
+			problemDescription: "Descrizione problematica",
+			recipient: "Destinatario previsto",
+		},
+	},
+	en: {
+		title: "Technical support form",
+		success: "✓ Request sent. Our technical team will contact you as soon as possible.",
+		headline: "New request from the technical support form",
+		dateRequest: "Request date",
+		clientCode: "Client code",
+		client: "Client / Company name",
+		contactPerson: "Contact person",
+		phone: "Phone number",
+		email: "Email",
+		contactTimes: "Preferred contact times",
+		system: "System",
+		typeModel: "Type / Model",
+		softwareLabel: "Software",
+		computerBrand: "Computer brand",
+		windowsVersion: "Windows version",
+		cameraCount: "Number of cameras",
+		problemDescription: "Problem description",
+		selectSystem: "Select a system",
+		annualContract: "I have an annual technical support contract",
+		authorizeSupremo: "I authorize remote access via Supremo",
+		eol: "I confirm that I have read the EOL declaration",
+		textPlaceholder: "Enter here",
+		textareaPlaceholder: "Describe the issue you encountered",
+		yes: "Yes",
+		no: "No",
+		submit: "Send request",
+		tagline: "Fast support, precise handling.",
+		help: "Fill out the form with all available technical details. Our support team will contact you promptly to review the issue and schedule the intervention.",
+		error: "There was an error sending your request. Please try again.",
+		narrative: {
+			requestDate: "Request date",
+			clientCode: "Client code",
+			client: "Client / Company name",
+			contactPerson: "Contact person",
+			phone: "Phone",
+			email: "Email",
+			contactTimes: "Preferred contact times",
+			system: "System",
+			typeModel: "Type / Model",
+			software: "Software",
+			computerBrand: "Computer brand",
+			windowsVersion: "Windows version",
+			cameraCount: "Number of cameras",
+			contract: "Support contract",
+			authorizeSupremo: "Authorize Supremo",
+			eol: "EOL declaration",
+			problemDescription: "Problem description",
+			recipient: "Intended recipient",
+		},
+	},
+} as const;
 
 /* ─── Opzioni select ────────────────────────────────────────────── */
 const SISTEMI = [
@@ -90,7 +196,8 @@ const initialState: FormState = {
 /* ════════════════════════════════════════════════════════════════ */
 /*  COMPONENTE                                                     */
 /* ════════════════════════════════════════════════════════════════ */
-export function SupportForm() {
+export function SupportForm({ locale }: { locale: Locale }) {
+	const copy = FORM_COPY[locale] ?? FORM_COPY.it;
 	const [form, setForm] = useState<FormState>(initialState);
 	const [loading, setLoading] = useState(false);
 	const [success, setSuccess] = useState(false);
@@ -148,29 +255,29 @@ export function SupportForm() {
 					referente: form.referente,
 					sistema: form.sistema,
 					messaggio: [
-						"Nuova richiesta dal modulo assistenza tecnica",
+						copy.headline,
 						"",
-						`Data richiesta: ${form.dataRichiesta || "-"}`,
-						`Codice cliente: ${form.codiceCliente || "-"}`,
-						`Cliente / Ragione sociale: ${form.cliente || "-"}`,
-						`Referente: ${form.referente || "-"}`,
-						`Telefono: ${form.telefono || "-"}`,
-						`Email: ${form.email || "-"}`,
-						`Orari di contatto: ${form.orariContatto || "-"}`,
-						`Sistema: ${form.sistema || "-"}`,
-						`Tipologia / Modello: ${form.tipologiaModello || "-"}`,
-						`Software: ${form.software || "-"}`,
-						`Marca computer: ${form.marcaComputer || "-"}`,
-						`Versione Windows: ${form.versioneWindows || "-"}`,
-						`Numero telecamere: ${form.numTelecamere || "-"}`,
-						`Contratto assistenza: ${form.contrattoAssistenza || "-"}`,
+						`${copy.narrative.requestDate}: ${form.dataRichiesta || "-"}`,
+						`${copy.narrative.clientCode}: ${form.codiceCliente || "-"}`,
+						`${copy.narrative.client}: ${form.cliente || "-"}`,
+						`${copy.narrative.contactPerson}: ${form.referente || "-"}`,
+						`${copy.narrative.phone}: ${form.telefono || "-"}`,
+						`${copy.narrative.email}: ${form.email || "-"}`,
+						`${copy.narrative.contactTimes}: ${form.orariContatto || "-"}`,
+						`${copy.narrative.system}: ${form.sistema || "-"}`,
+						`${copy.narrative.typeModel}: ${form.tipologiaModello || "-"}`,
+						`${copy.narrative.software}: ${form.software || "-"}`,
+						`${copy.narrative.computerBrand}: ${form.marcaComputer || "-"}`,
+						`${copy.narrative.windowsVersion}: ${form.versioneWindows || "-"}`,
+						`${copy.narrative.cameraCount}: ${form.numTelecamere || "-"}`,
+						`${copy.narrative.contract}: ${form.contrattoAssistenza || "-"}`,
 						`Autorizza Supremo: ${form.autorizzaSupremo ? "Sì" : "No"}`,
 						`Dichiarazione EOL: ${form.dichiarazioneEol ? "Sì" : "No"}`,
 						"",
-						"Descrizione problematica:",
+						`${copy.narrative.problemDescription}:`,
 						form.descrizione,
 						"",
-						`Destinatario previsto: ${ASSISTENZA_EMAIL}`,
+						`${copy.narrative.recipient}: ${ASSISTENZA_EMAIL}`,
 					].join("\n"),
 				}),
 			});
@@ -282,7 +389,7 @@ export function SupportForm() {
 									}}
 								>
 									<div>
-										<label style={labelStyle}>Data richiesta</label>
+										<label style={labelStyle}>{copy.dateRequest}</label>
 										<input
 											type="date"
 											name="dataRichiesta"
@@ -296,7 +403,7 @@ export function SupportForm() {
 									</div>
 
 									<div>
-										<label style={labelStyle}>Codice cliente</label>
+										<label style={labelStyle}>{copy.clientCode}</label>
 										<input
 											type="text"
 											name="codiceCliente"
@@ -381,7 +488,7 @@ export function SupportForm() {
 									</div>
 
 									<div>
-										<label style={labelStyle}>Orari di contatto</label>
+										<label style={labelStyle}>{copy.contactTimes}</label>
 										<input
 											type="text"
 											name="orariContatto"
@@ -404,7 +511,7 @@ export function SupportForm() {
 										onChange={handleChange}
 										style={fieldStyle(!!errors.sistema)}
 									>
-										<option value="">Seleziona sistema</option>
+										<option value="">{copy.selectSystem}</option>
 										{SISTEMI.filter((s) => s !== "").map((s) => (
 											<option key={s} value={s}>
 												{s}
@@ -422,7 +529,7 @@ export function SupportForm() {
 									}}
 								>
 									<div>
-										<label style={labelStyle}>Tipologia / Modello</label>
+										<label style={labelStyle}>{copy.typeModel}</label>
 										<input
 											type="text"
 											name="tipologiaModello"
@@ -433,7 +540,7 @@ export function SupportForm() {
 									</div>
 
 									<div>
-										<label style={labelStyle}>Software</label>
+										<label style={labelStyle}>{copy.softwareLabel}</label>
 										<input
 											type="text"
 											name="software"
@@ -453,7 +560,7 @@ export function SupportForm() {
 									}}
 								>
 									<div>
-										<label style={labelStyle}>Marca computer</label>
+										<label style={labelStyle}>{copy.computerBrand}</label>
 										<input
 											type="text"
 											name="marcaComputer"
@@ -464,7 +571,7 @@ export function SupportForm() {
 									</div>
 
 									<div>
-										<label style={labelStyle}>Versione Windows</label>
+										<label style={labelStyle}>{copy.windowsVersion}</label>
 										<input
 											type="text"
 											name="versioneWindows"
@@ -478,7 +585,7 @@ export function SupportForm() {
 
 								{form.sistema === "Body Analysis Capture" && (
 									<div>
-										<label style={labelStyle}>Numero telecamere</label>
+										<label style={labelStyle}>{copy.cameraCount}</label>
 										<select
 											name="numTelecamere"
 											value={form.numTelecamere}
@@ -647,13 +754,13 @@ export function SupportForm() {
 						}}
 					>
 						<SplitText
-							text="Supporto rapido, gestione precisa."
+							text={copy.tagline}
 							tag="h2"
 							style={{
 								fontSize: "clamp(28px,4vw,48px)",
 								lineHeight: 1.05,
 								margin: 0,
-								color: "white",
+								color: "var(--text-primary)",
 								fontWeight: 500,
 								maxWidth: 12,
 							}}
@@ -665,15 +772,13 @@ export function SupportForm() {
 							background: "rgba(255,255,255,0.03)",
 							border: "1px solid rgba(255,255,255,0.08)",
 							padding: "clamp(24px,3vw,32px)",
-							color: "rgba(255,255,255,0.82)",
+							color: "var(--text-primary)",
 							fontSize: "var(--text-sm)",
 							lineHeight: 1.7,
 						}}
 					>
 						<p style={{ margin: 0 }}>
-							Compila il modulo con tutti i dettagli tecnici disponibili. La
-							richiesta verrà inoltrata al reparto commerciale e assistenza per
-							la presa in carico.
+							{copy.help}
 						</p>
 					</div>
 				</div>

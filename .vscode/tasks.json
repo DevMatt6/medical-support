@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "pnpm: typecheck",
+      "type": "shell",
+      "command": "if command -v pnpm >/dev/null 2>&1; then pnpm exec tsc --noEmit --pretty false; elif [ -x \"$HOME/.local/share/pnpm/pnpm\" ]; then \"$HOME/.local/share/pnpm/pnpm\" exec tsc --noEmit --pretty false; else corepack pnpm exec tsc --noEmit --pretty false; fi",
+      "problemMatcher": "$tsc",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "pnpm: build",
+      "type": "shell",
+      "command": "if command -v pnpm >/dev/null 2>&1; then pnpm build; elif [ -x \"$HOME/.local/share/pnpm/pnpm\" ]; then \"$HOME/.local/share/pnpm/pnpm\" build; else corepack pnpm build; fi",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    },
+    {
+      "label": "pnpm: lint",
+      "type": "shell",
+      "command": "if command -v pnpm >/dev/null 2>&1; then pnpm lint; elif [ -x \"$HOME/.local/share/pnpm/pnpm\" ]; then \"$HOME/.local/share/pnpm/pnpm\" lint; else corepack pnpm lint; fi",
+      "problemMatcher": "$eslint-stylish",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "clear": true
+      }
+    }
+  ]
+}

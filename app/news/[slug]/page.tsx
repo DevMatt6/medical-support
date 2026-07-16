@@ -4,9 +4,10 @@ import { ChevronLeft } from "lucide-react";
 import { NEWS_DATA } from "@/lib/news";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
+import { localize, type Locale } from "@/lib/i18n";
 
-function formatDate(dateString: string) {
-	return new Intl.DateTimeFormat("it-IT", {
+function formatDate(dateString: string, locale: Locale) {
+	return new Intl.DateTimeFormat(locale === "en" ? "en-GB" : "it-IT", {
 		day: "2-digit",
 		month: "long",
 		year: "numeric",
@@ -16,9 +17,9 @@ function formatDate(dateString: string) {
 export default async function NewsDetail({
 	params,
 }: {
-	params: Promise<{ slug: string }>;
+	params: Promise<{ slug: string; locale?: Locale }>;
 }) {
-	const { slug } = await params;
+	const { slug, locale = "it" } = await params;
 	const item = NEWS_DATA[slug];
 	if (!item) return notFound();
 
@@ -32,7 +33,7 @@ export default async function NewsDetail({
 		>
 			<div style={{ marginInline: "auto", width: "100%" }}>
 				<Link
-					href="/news"
+					href={`/${locale}/news`}
 					style={{
 						display: "inline-flex",
 						alignItems: "center",
@@ -45,7 +46,7 @@ export default async function NewsDetail({
 					}}
 				>
 					<ChevronLeft size={16} />
-					Torna alle news
+					{locale === "en" ? "Back to news" : "Torna alle news"}
 				</Link>
 
 				<ScrollReveal variant="fadeIn" delay={0.05}>
@@ -60,12 +61,12 @@ export default async function NewsDetail({
 							textTransform: "uppercase",
 						}}
 					>
-						{item.category}
+						{localize(item.category)}
 					</span>
 				</ScrollReveal>
 
 				<SplitText
-					text={item.title}
+					text={localize(item.title)}
 					tag="h1"
 					stagger={0.03}
 					delay={0.12}
@@ -89,7 +90,7 @@ export default async function NewsDetail({
 						maxWidth: 820,
 					}}
 				>
-					{formatDate(item.date)}
+					{formatDate(item.date, locale)}
 					{item.location ? ` • ${item.location}` : ""}
 				</p>
 
@@ -104,7 +105,7 @@ export default async function NewsDetail({
 							maxWidth: 860,
 						}}
 					>
-						{item.subtitle}
+						{localize(item.subtitle ?? "") || ""}
 					</p>
 				) : null}
 
@@ -131,7 +132,7 @@ export default async function NewsDetail({
 						marginInline: "auto",
 					}}
 				>
-					{item.content.map((paragraph, index) => (
+					{localize(item.content).map((paragraph, index) => (
 						<p
 							key={index}
 							style={{

@@ -15,10 +15,16 @@ interface SplitTextProps {
 	tag?: TagName;
 	stagger?: number;
 	style?: React.CSSProperties;
-	accentWords?: string[];
+	accentWords?: readonly string[];
 	accentColor?: string;
 	immediate?: boolean;
 }
+
+const MotionH1 = motion.h1;
+const MotionH2 = motion.h2;
+const MotionH3 = motion.h3;
+const MotionH4 = motion.h4;
+const MotionP = motion.p;
 
 export function SplitText({
 	text,
@@ -32,49 +38,60 @@ export function SplitText({
 	accentColor,
 	immediate = false,
 }: SplitTextProps) {
-	const ref = useRef<HTMLElement>(null);
+	const ref = useRef<HTMLHeadingElement | HTMLParagraphElement>(null);
 	const isInView = useInView(ref, { once: true, amount: 0 });
-
 	const content = text ?? (typeof children === "string" ? children : "");
-	const MotionTag = motion.create(tag) as typeof motion.div;
 	const words = content.split(" ");
 
-	return (
-		<MotionTag
-			ref={ref as React.Ref<any>}
-			className={cn(className)}
-			style={{ position: "relative", ...style }}
-			variants={staggerContainer}
-			initial="hidden"
-			animate={immediate || isInView ? "visible" : "hidden"}
-			transition={{ staggerChildren: stagger, delayChildren: delay }}
-		>
-			{words.map((word, i) => {
-				const isAccent = accentWords?.includes(
-					word.trim().replace(/[.,!?;:]+$/, ""),
-				);
-				const colorStyle = isAccent
-					? { color: accentColor || "var(--accent)" }
-					: undefined;
-				return (
-					<span
-						key={i}
-						style={{
-							display: "inline-block",
-							overflow: "hidden",
-							verticalAlign: "bottom",
-							marginRight: "0.25em",
-						}}
-					>
-						<motion.span
-							style={{ display: "inline-block", ...colorStyle }}
-							variants={textReveal}
-						>
-							{word}
-						</motion.span>
-					</span>
-				);
-			})}
-		</MotionTag>
-	);
+	const animateState: "visible" | "hidden" = immediate || isInView ? "visible" : "hidden";
+
+	const sharedProps = {
+		ref,
+		className: cn(className),
+		variants: staggerContainer,
+		initial: "hidden" as const,
+		animate: animateState,
+		transition: { staggerChildren: stagger, delayChildren: delay },
+	};
+
+	const mergedStyle: React.CSSProperties = { position: "relative", ...style };
+
+	const renderedWords = words.map((word, i) => {
+		const isAccent = accentWords?.includes(word.trim().replace(/[.,!?;:]+$/, ""));
+		const colorStyle = isAccent ? { color: accentColor || "var(--accent)" } : undefined;
+		const isLastWord = i === words.length - 1;
+		return (
+			<span
+				key={`${word}-${i}`}
+				style={{
+					display: "inline-block",
+					overflow: "hidden",
+					verticalAlign: "bottom",
+					marginRight: isLastWord ? 0 : "0.25em",
+				}}
+			>
+				<motion.span style={{ display: "inline-block", ...colorStyle }} variants={textReveal}>
+					{word}
+				</motion.span>
+			</span>
+		);
+	});
+
+	if (tag === "h1") {
+		return <MotionH1 {...sharedProps} style={mergedStyle}>{renderedWords}</MotionH1>;
+	}
+
+	if (tag === "h2") {
+		return <MotionH2 {...sharedProps} style={mergedStyle}>{renderedWords}</MotionH2>;
+	}
+
+	if (tag === "h3") {
+		return <MotionH3 {...sharedProps} style={mergedStyle}>{renderedWords}</MotionH3>;
+	}
+
+	if (tag === "h4") {
+		return <MotionH4 {...sharedProps} style={mergedStyle}>{renderedWords}</MotionH4>;
+	}
+
+	return <MotionP {...sharedProps} style={mergedStyle}>{renderedWords}</MotionP>;
 }

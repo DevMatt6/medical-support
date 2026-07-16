@@ -22,6 +22,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import type { Product } from "@/types";
+import { localize, type Locale } from "@/lib/i18n";
 
 /* ─── Lucide icon resolver ─────────────────────────────────────── */
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -48,6 +49,7 @@ function DynamicIcon({ name, size = 28 }: { name: string; size?: number }) {
 /* ─── Props ────────────────────────────────────────────────────── */
 export interface ProductPageProps {
 	product: Product;
+	locale?: Locale;
 	heroTagline: string;
 	description: string[];
 	features: Array<{ title: string; description: string; icon: string }>;
@@ -73,13 +75,39 @@ const sectionPad: React.CSSProperties = {
 	paddingInline: "clamp(24px,5vw,80px)",
 };
 
+const PRODUCT_PAGE_COPY = {
+	it: {
+		features: "Caratteristiche",
+		specs: "Specifiche Tecniche",
+		diagnosticProtocol: "Protocollo Diagnostico",
+		requestInfo: "Richiedi Info",
+		downloadDatasheet: "Scarica Scheda Tecnica",
+		model: "Modello",
+		dimensions: "Dimensioni",
+		sensors: "Sensori",
+		usage: "Utilizzo",
+	},
+	en: {
+		features: "Features",
+		specs: "Technical Specifications",
+		diagnosticProtocol: "Diagnostic Protocol",
+		requestInfo: "Request Info",
+		downloadDatasheet: "Download Technical Datasheet",
+		model: "Model",
+		dimensions: "Dimensions",
+		sensors: "Sensors",
+		usage: "Usage",
+	},
+} as const;
+
 /* ════════════════════════════════════════════════════════════════ */
 /*  1. HERO                                                         */
 /* ════════════════════════════════════════════════════════════════ */
 function ProductHero({
 	product,
 	heroTagline,
-}: Pick<ProductPageProps, "product" | "heroTagline">) {
+	locale = "it",
+}: Pick<ProductPageProps, "product" | "heroTagline" | "locale">) {
 	return (
 		<section
 			style={{
@@ -118,13 +146,13 @@ function ProductHero({
 							padding: "6px 14px",
 						}}
 					>
-						Linea Cristal
+						{locale === "en" ? "Cristal Line" : "Linea Cristal"}
 					</p>
 				</ScrollReveal>
 
 				{/* H1 */}
 				<SplitText
-					text={product.name}
+					text={localize(product.name, locale)}
 					tag="h1"
 					stagger={0.04}
 					delay={0.1}
@@ -163,9 +191,9 @@ function ProductHero({
 								marginTop: 24,
 							}}
 						>
-							{product.badges.map((badge) => (
+							{product.badges.map((badge, badgeIndex) => (
 								<span
-									key={badge}
+									key={`${product.id}-badge-${badgeIndex}`}
 									style={{
 										display: "inline-block",
 										padding: "5px 14px",
@@ -176,7 +204,7 @@ function ProductHero({
 										color: "white",
 									}}
 								>
-									{badge}
+									{localize(badge, locale)}
 								</span>
 							))}
 						</div>
@@ -195,7 +223,7 @@ function ProductHero({
 					>
 						<MagneticButton
 							as="a"
-							href="/contatti"
+							href={`/${locale}/contatti`}
 							style={{
 								padding: "14px 40px",
 								background: "white",
@@ -205,7 +233,7 @@ function ProductHero({
 								textDecoration: "none",
 							}}
 						>
-							Richiedi Info
+							{locale === "en" ? "Request Info" : "Richiedi Info"}
 						</MagneticButton>
 						<MagneticButton
 							as="a"
@@ -220,7 +248,7 @@ function ProductHero({
 								background: "transparent",
 							}}
 						>
-							Scarica Scheda Tecnica
+							{locale === "en" ? "Download Technical Datasheet" : "Scarica Scheda Tecnica"}
 						</MagneticButton>
 					</div>
 				</ScrollReveal>
@@ -236,7 +264,8 @@ function ProductDescription({
 	description,
 	product,
 	descriptionTitle,
-}: Pick<ProductPageProps, "description" | "product" | "descriptionTitle">) {
+	locale = "it",
+}: Pick<ProductPageProps, "description" | "product" | "descriptionTitle" | "locale">) {
 	const imageRef = useRef<HTMLDivElement>(null);
 	const { scrollYProgress } = useScroll({
 		target: imageRef,
@@ -278,7 +307,7 @@ function ProductDescription({
 									padding: "6px 14px",
 								}}
 							>
-								Linea Cristal
+								{locale === "en" ? "Cristal Line" : "Linea Cristal"}
 							</p>
 						</ScrollReveal>{" "}
 						{descriptionTitle && (
@@ -345,12 +374,14 @@ function ProductDescription({
 function ProductFeatures({
 	features,
 	models,
-}: Pick<ProductPageProps, "features" | "models">) {
+	locale = "it",
+}: Pick<ProductPageProps, "features" | "models" | "locale">) {
+	const copy = PRODUCT_PAGE_COPY[locale] ?? PRODUCT_PAGE_COPY.it;
 	return (
 		<section style={{ ...sectionPad, background: "var(--primary" }}>
 			<ScrollReveal variant="fadeUp" delay={0.05}>
 				<SplitText
-					text="Caratteristiche"
+					text={copy.features}
 					tag="h2"
 					stagger={0.03}
 					delay={0.1}
@@ -381,7 +412,7 @@ function ProductFeatures({
 						>
 							<thead>
 								<tr>
-									{["Modello", "Dimensioni", "Sensori", "Utilizzo"].map((h) => (
+									{[copy.model, copy.dimensions, copy.sensors, copy.usage].map((h) => (
 										<th
 											key={h}
 											style={{
@@ -519,9 +550,12 @@ function ProductFeatures({
 /* ════════════════════════════════════════════════════════════════ */
 function ProductEbdSection({
 	ebdSection,
+	locale = "it",
 }: {
 	ebdSection: NonNullable<ProductPageProps["ebdSection"]>;
+	locale?: Locale;
 }) {
+	const copy = PRODUCT_PAGE_COPY[locale] ?? PRODUCT_PAGE_COPY.it;
 	return (
 		<section style={{ ...sectionPad, background: "var(--accent)" }}>
 			<div
@@ -548,7 +582,7 @@ function ProductEbdSection({
 								marginBottom: "var(--space-3)",
 							}}
 						>
-							Protocollo Diagnostico
+							{copy.diagnosticProtocol}
 						</p>
 					</ScrollReveal>
 					<ScrollReveal delay={0.05}>
@@ -661,12 +695,13 @@ function ProductEbdSection({
 /* ════════════════════════════════════════════════════════════════ */
 /*  5. SPECS                                                        */
 /* ════════════════════════════════════════════════════════════════ */
-function ProductSpecs({ specs }: Pick<ProductPageProps, "specs">) {
+function ProductSpecs({ specs, locale = "it" }: Pick<ProductPageProps, "specs" | "locale">) {
+	const copy = PRODUCT_PAGE_COPY[locale] ?? PRODUCT_PAGE_COPY.it;
 	return (
 		<section style={{ ...sectionPad, background: "white" }}>
 			<ScrollReveal variant="fadeUp" delay={0.05}>
 				<SplitText
-					text="Specifiche Tecniche"
+					text={copy.specs}
 					tag="h2"
 					stagger={0.03}
 					delay={0.1}
@@ -732,7 +767,13 @@ function ProductSpecs({ specs }: Pick<ProductPageProps, "specs">) {
 /* ════════════════════════════════════════════════════════════════ */
 /*  5. CTA                                                          */
 /* ════════════════════════════════════════════════════════════════ */
-function ProductCTA({ product }: Pick<ProductPageProps, "product">) {
+function ProductCTA({ product, locale = "it" }: Pick<ProductPageProps, "product" | "locale">) {
+	const copy = PRODUCT_PAGE_COPY[locale] ?? PRODUCT_PAGE_COPY.it;
+	const localizedProductName = localize(product.name, locale);
+	const ctaTitle = locale === "en" ? `Start with ${localizedProductName}` : `Inizia con ${localizedProductName}`;
+	const ctaDescription = locale === "en"
+		? "Contact us for a personalized demo or download the complete technical datasheet."
+		: "Contattaci per una dimostrazione personalizzata o scarica la scheda tecnica completa.";
 	return (
 		<section
 			style={{
@@ -761,7 +802,7 @@ function ProductCTA({ product }: Pick<ProductPageProps, "product">) {
 			<div style={{ position: "relative", zIndex: 2 }}>
 				<ScrollReveal variant="fadeUp" delay={0.05}>
 					<SplitText
-						text={`Inizia con ${product.name}`}
+						text={ctaTitle}
 						tag="h2"
 						stagger={0.04}
 						delay={0.1}
@@ -785,8 +826,7 @@ function ProductCTA({ product }: Pick<ProductPageProps, "product">) {
 							lineHeight: 1.65,
 						}}
 					>
-						Contattaci per una dimostrazione personalizzata o scarica la scheda
-						tecnica completa.
+						{ctaDescription}
 					</p>
 				</ScrollReveal>
 
@@ -802,7 +842,7 @@ function ProductCTA({ product }: Pick<ProductPageProps, "product">) {
 					>
 						<MagneticButton
 							as="a"
-							href="/contatti"
+							href={`/${locale}/contatti`}
 							style={{
 								padding: "14px 40px",
 								background: "white",
@@ -812,7 +852,7 @@ function ProductCTA({ product }: Pick<ProductPageProps, "product">) {
 								textDecoration: "none",
 							}}
 						>
-							Richiedi Info
+							{copy.requestInfo}
 						</MagneticButton>
 						<MagneticButton
 							as="a"
@@ -827,7 +867,7 @@ function ProductCTA({ product }: Pick<ProductPageProps, "product">) {
 								background: "transparent",
 							}}
 						>
-							Scarica Scheda Tecnica
+							{copy.downloadDatasheet}
 						</MagneticButton>
 					</div>
 				</ScrollReveal>
@@ -841,6 +881,7 @@ function ProductCTA({ product }: Pick<ProductPageProps, "product">) {
 /* ════════════════════════════════════════════════════════════════ */
 export function ProductPageTemplate({
 	product,
+	locale = "it",
 	heroTagline,
 	description,
 	descriptionTitle,
@@ -851,16 +892,17 @@ export function ProductPageTemplate({
 }: ProductPageProps) {
 	return (
 		<>
-			<ProductHero product={product} heroTagline={heroTagline} />
+			<ProductHero product={product} heroTagline={heroTagline} locale={locale} />
 			<ProductDescription
 				description={description}
 				product={product}
 				descriptionTitle={descriptionTitle}
+				locale={locale}
 			/>
-			<ProductFeatures features={features} models={models} />
-			{ebdSection && <ProductEbdSection ebdSection={ebdSection} />}
-			<ProductSpecs specs={specs} />
-			<ProductCTA product={product} />
+			<ProductFeatures features={features} models={models} locale={locale} />
+			{ebdSection && <ProductEbdSection ebdSection={ebdSection} locale={locale} />}
+			<ProductSpecs specs={specs} locale={locale} />
+			<ProductCTA product={product} locale={locale} />
 		</>
 	);
 }

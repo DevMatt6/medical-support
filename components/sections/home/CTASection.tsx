@@ -5,8 +5,12 @@ import { scaleIn } from "@/lib/animations";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { SplitText } from "@/components/ui/SplitText";
 import { MagneticButton } from "@/components/ui/MagneticButton";
+import { useRouteLocale } from "@/lib/route-locale";
+import { homeCopy } from "@/lib/home-copy";
 
 export function CTASection() {
+	const locale = useRouteLocale();
+	const copy = homeCopy.cta[locale];
 	return (
 		<motion.section
 			variants={scaleIn}
@@ -91,13 +95,13 @@ export function CTASection() {
 							padding: "6px 14px",
 						}}
 					>
-						Scopri di più
+						{locale === "it" ? "Scopri di più" : "Learn more"}
 					</span>
 				</ScrollReveal>
 
 				{/* Heading */}
 				<SplitText
-					text="Porta la diagnostica posturale al livello successivo."
+					text={copy.headline}
 					tag="h2"
 					stagger={0.03}
 					delay={0.2}
@@ -123,8 +127,7 @@ export function CTASection() {
 							lineHeight: 1.7,
 						}}
 					>
-						Scopri come i sistemi Medical Support possono trasformare il tuo
-						studio o reparto clinico.
+						{copy.subheadline}
 					</p>
 				</ScrollReveal>
 
@@ -141,7 +144,7 @@ export function CTASection() {
 					>
 						<MagneticButton
 							as="a"
-							href="/contatti"
+							href={`/${locale}/contatti`}
 							style={{
 								padding: "14px 40px",
 								background: "white",
@@ -151,12 +154,12 @@ export function CTASection() {
 								textDecoration: "none",
 							}}
 						>
-							Richiedi una Demo
+							{copy.ctaPrimary}
 						</MagneticButton>
 
 						<MagneticButton
 							as="a"
-							href="/prodotti"
+							href={`/${locale}/prodotti`}
 							style={{
 								padding: "14px 40px",
 								border: "1px solid rgba(255,255,255,0.3)",
@@ -167,7 +170,7 @@ export function CTASection() {
 								textDecoration: "none",
 							}}
 						>
-							Esplora i Prodotti
+							{copy.ctaSecondary}
 						</MagneticButton>
 					</div>
 				</ScrollReveal>

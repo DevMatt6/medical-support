@@ -1,39 +1,49 @@
+export type Locale = "it" | "en";
+
+export type LocalizedString = Record<Locale, string>;
+export type LocalizedStringArray = Record<Locale, string[]>;
+
 export interface NavItem {
-	label: string;
+	label: string | LocalizedString;
 	href: string;
-	description?: string;
+	description?: string | LocalizedString;
 	children?: NavItem[];
 }
 
 export interface Product {
 	id: string;
-	name: string;
+	name: string | LocalizedString;
 	slug: string;
-	tagline: string;
-	description: string;
-	badges: string[];
-	category: string;
+	tagline: string | LocalizedString;
+	description: string | LocalizedString;
+	badges: Array<string | LocalizedString>;
+	category: string | LocalizedString;
 	image?: string;
 }
 
 export interface NewsItem {
 	id: string;
 	slug: string;
-	title: string;
-	subtitle?: string;
-	excerpt: string;
-	content: string[];
-	category: "evento" | "novità" | "progetti" | "clinica";
+	title: string | LocalizedString;
+	subtitle?: string | LocalizedString;
+	excerpt: string | LocalizedString;
+	content: string[] | LocalizedStringArray;
+	category:
+		| "evento"
+		| "novità"
+		| "progetti"
+		| "clinica"
+		| LocalizedString;
 	date: string;
 	image?: string;
-	agent?: string;
-	location?: string;
+	agent?: string | LocalizedString;
+	location?: string | LocalizedString;
 	endDate?: string;
 }
 
 export interface SiteConfig {
 	name: string;
-	description: string;
+	description: string | LocalizedString;
 	url: string;
 	nav: NavItem[];
 	products: Product[];

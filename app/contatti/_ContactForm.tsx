@@ -4,19 +4,81 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SplitText } from "@/components/ui/SplitText";
+import { type Locale } from "@/lib/i18n";
 
-const PROFESSIONI = [
-	"Fisiatra",
-	"Ortopedico",
-	"Podologo",
-	"Fisioterapista",
-	"Neurologo",
-	"Medico dello Sport",
-	"Odontoiatra",
-	"Osteopata",
-	"Ortottista",
-	"Altro",
-];
+const CONTACT_COPY = {
+	it: {
+		writeUs: "Scrivici",
+		success: "✓ Messaggio inviato. Ti contatteremo presto.",
+		name: "Nome",
+		surname: "Cognome",
+		profession: "Professione",
+		email: "Email",
+		message: "Messaggio",
+		submit: "Invia messaggio",
+		sending: "{copy.sending}",
+		selectPlaceholder: "Seleziona",
+		infoTitle: "Contattaci per maggiori informazioni sui nostri prodotti",
+		infoAccentWords: ["Contattaci", "per", "maggiori", "informazioni"],
+		partnerLabel: "Partner",
+		helper: "Compila il modulo per richiedere informazioni, una demo o un contatto diretto con il nostro team.",
+		placeholders: {
+			name: "Il tuo nome",
+			surname: "Il tuo cognome",
+			email: "La tua email",
+			message: "Raccontaci cosa ti serve",
+		},
+	},
+	en: {
+		writeUs: "Write to us",
+		success: "✓ Message sent. We will contact you soon.",
+		name: "First name",
+		surname: "Last name",
+		profession: "Profession",
+		email: "Email",
+		message: "Message",
+		submit: "Send message",
+		sending: "Sending...",
+		selectPlaceholder: "Select",
+		infoTitle: "Contact us for more information about our products",
+		infoAccentWords: ["Contact", "more", "information"],
+		partnerLabel: "Partner",
+		helper: "Fill out the form to request information, a demo, or direct contact with our team.",
+		placeholders: {
+			name: "Your first name",
+			surname: "Your last name",
+			email: "Your email",
+			message: "Tell us what you need",
+		},
+	},
+} as const;
+
+const PROFESSIONI = {
+	it: [
+		"Fisiatra",
+		"Ortopedico",
+		"Podologo",
+		"Fisioterapista",
+		"Neurologo",
+		"Medico dello Sport",
+		"Odontoiatra",
+		"Osteopata",
+		"Ortottista",
+		"Altro",
+	],
+	en: [
+		"Physiatrist",
+		"Orthopedist",
+		"Podiatrist",
+		"Physiotherapist",
+		"Neurologist",
+		"Sports physician",
+		"Dentist",
+		"Osteopath",
+		"Orthoptist",
+		"Other",
+	],
+} as const;
 
 const labelStyle: React.CSSProperties = {
 	display: "block",
@@ -42,7 +104,9 @@ function fieldStyle(hasError: boolean): React.CSSProperties {
 	};
 }
 
-export function ContactForm() {
+export function ContactForm({ locale }: { locale: Locale }) {
+	const copy = CONTACT_COPY[locale] ?? CONTACT_COPY.it;
+	const professioni = PROFESSIONI[locale] ?? PROFESSIONI.it;
 	const [nome, setNome] = useState("");
 	const [cognome, setCognome] = useState("");
 	const [professione, setProfessione] = useState("");
@@ -103,7 +167,7 @@ export function ContactForm() {
 							color: "white",
 						}}
 					>
-						Scrivici
+						{copy.writeUs}
 					</p>
 
 					<AnimatePresence mode="wait">
@@ -121,7 +185,7 @@ export function ContactForm() {
 									paddingBlock: 32,
 								}}
 							>
-								✓ Messaggio inviato. Ti contatteremo presto.
+								{copy.success}
 							</motion.div>
 						) : (
 							<motion.form
@@ -145,20 +209,22 @@ export function ContactForm() {
 									}}
 								>
 									<div>
-										<label style={labelStyle}>Nome</label>
+										<label style={labelStyle}>{copy.name}</label>
 										<input
 											type="text"
 											value={nome}
 											onChange={(e) => setNome(e.target.value)}
+											placeholder={copy.placeholders.name}
 											style={fieldStyle(!!errors.nome)}
 										/>
 									</div>
 									<div>
-										<label style={labelStyle}>Cognome</label>
+										<label style={labelStyle}>{copy.surname}</label>
 										<input
 											type="text"
 											value={cognome}
 											onChange={(e) => setCognome(e.target.value)}
+											placeholder={copy.placeholders.surname}
 											style={fieldStyle(false)}
 										/>
 									</div>
@@ -166,14 +232,14 @@ export function ContactForm() {
 
 								{/* Professione */}
 								<div>
-									<label style={labelStyle}>Professione</label>
+									<label style={labelStyle}>{copy.profession}</label>
 									<select
 										value={professione}
 										onChange={(e) => setProfessione(e.target.value)}
 										style={fieldStyle(false)}
 									>
-										<option value="">Seleziona</option>
-										{PROFESSIONI.map((p) => (
+										<option value="">{copy.selectPlaceholder}</option>
+										{professioni.map((p) => (
 											<option key={p} value={p}>
 												{p}
 											</option>
@@ -183,18 +249,19 @@ export function ContactForm() {
 
 								{/* Email */}
 								<div>
-									<label style={labelStyle}>Email</label>
+									<label style={labelStyle}>{copy.email}</label>
 									<input
 										type="email"
 										value={email}
 										onChange={(e) => setEmail(e.target.value)}
+										placeholder={copy.placeholders.email}
 										style={fieldStyle(!!errors.email)}
 									/>
 								</div>
 
 								{/* Messaggio */}
 								<div>
-									<label style={labelStyle}>Messaggio</label>
+									<label style={labelStyle}>{copy.message}</label>
 									<textarea
 										value={messaggio}
 										onChange={(e) => setMessaggio(e.target.value)}
@@ -229,7 +296,7 @@ export function ContactForm() {
 								>
 									{loading ? (
 										<>
-											Invio in corso...
+											{copy.sending}
 											<motion.span
 												animate={{ rotate: 360 }}
 												transition={{
@@ -243,7 +310,7 @@ export function ContactForm() {
 											</motion.span>
 										</>
 									) : (
-										"Invia messaggio"
+										copy.submit
 									)}
 								</button>
 							</motion.form>
@@ -267,22 +334,23 @@ export function ContactForm() {
 							marginBottom: 24,
 							color: "var(--primary)",
 						}}
-						accentWords={["Contattaci", "per", "maggiori", "informazioni"]}
+						accentWords={copy.infoAccentWords}
 						accentColor="var(--accent)"
 					>
-						Contattaci per maggiori informazioni sui nostri prodotti
+						{copy.infoTitle}
 					</SplitText>
-					<span
+					<p
 						style={{
 							fontSize: "var(--text-sm)",
 							color: "var(--muted-foreground)",
 							display: "block",
 							padding: "16px 0",
 							borderBottom: "1px solid var(--border)",
+							margin: 0,
 						}}
 					>
 						Via Ippolito Nievo, 61 — 00153 Roma
-					</span>
+					</p>
 					<a
 						href="tel:+393475183978"
 						style={{
@@ -320,7 +388,7 @@ export function ContactForm() {
 							marginBottom: 8,
 						}}
 					>
-						Partner
+						{copy.partnerLabel}
 					</span>
 					<img
 						src="/images/partner/logo-confimea.svg"
